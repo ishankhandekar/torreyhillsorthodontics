@@ -1,0 +1,654 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  /* Width of the white bezel around the hero */
+  --frame: 14px;
+  --ink: #16232c;
+  /* Frosted-glass surface shared by the nav pills and the menu toggle */
+  --glass-bg: rgba(255, 255, 255, 0.16);
+  --glass-border: rgba(255, 255, 255, 0.28);
+  --glass-blur: blur(14px) saturate(140%);
+  /* Navbar inner spacing (the scroll effect adds --frame on top of this) */
+  --nav-pad-y: 20px;
+  --nav-pad-x: 24px;
+}
+
+body {
+  margin: 0;
+  font-family: "Poppins", system-ui, sans-serif;
+  background: #fff;
+}
+
+/* Navbar: sits inside the framed hero, with the links in floating white pills */
+.navbar {
+  position: absolute;
+  top: var(--frame);
+  left: var(--frame);
+  right: var(--frame);
+  z-index: 10;
+  /* Equal side columns keep the links truly centered on the page */
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: var(--nav-pad-y) var(--nav-pad-x);
+}
+
+.logo {
+  justify-self: start;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #fff;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.logo-mark {
+  width: 52px;
+  height: auto;
+  fill: #fff;
+}
+
+.logo-wire {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+  font-family: "Jost", "Poppins", sans-serif;
+  line-height: 1;
+}
+
+.logo-top {
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.logo-name {
+  font-size: 1.55rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2px;
+  padding: 6px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border-radius: 999px;
+}
+
+.nav-links a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 9px 16px;
+  border-radius: 999px;
+  transition: background 0.2s;
+}
+
+.nav-links a:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.nav-actions {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 6px 6px 6px 18px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border-radius: 999px;
+}
+
+.nav-icon {
+  display: flex;
+  color: #fff;
+}
+
+.nav-icon svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+.nav-button {
+  color: #fff;
+  background: var(--ink);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 9px 20px;
+  border-radius: 999px;
+  transition: background 0.2s;
+}
+
+.nav-button:hover {
+  background: #2a86c4;
+}
+
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.nav-toggle span {
+  width: 18px;
+  height: 2px;
+  background: #fff;
+  transition: transform 0.25s, opacity 0.25s;
+}
+
+/* Frosted bezel: a blurred, lightened copy of the photo shows around the card */
+.hero-frame {
+  position: relative;
+  padding: var(--frame);
+  overflow: hidden;
+}
+
+.hero-frame::before,
+.hero-frame::after {
+  content: "";
+  position: absolute;
+}
+
+.hero-frame::before {
+  /* Oversized so the blur doesn't fade to transparent at the edges */
+  inset: -60px;
+  background: url("../images/hero.jpg") 35% 30% / cover no-repeat;
+  filter: blur(24px) saturate(140%);
+}
+
+.hero-frame::after {
+  inset: 0;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Hero: a rounded photo card inset inside the bezel */
+.hero {
+  position: relative;
+  z-index: 1;
+  height: calc(100vh - 2 * var(--frame));
+  height: calc(100svh - 2 * var(--frame));
+  border-radius: 28px;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35);
+  overflow: hidden;
+  background: url("../images/hero.jpg") 35% 30% / cover no-repeat;
+  /* Content sits in the lower part of the photo so it never covers her smile */
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  text-align: center;
+  padding: 0 24px 12vh;
+}
+
+/* Darkens the top of the photo so the white logo stays readable against the bright sky */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 220px;
+  background: linear-gradient(rgba(0, 0, 0, 0.35), transparent);
+}
+
+/* Light wash over the whole photo so the white headline holds up on the bright sky */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(10, 30, 45, 0.1) 40%, rgba(10, 30, 45, 0.45));
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+}
+
+.hero h1 {
+  margin: 0 0 40px;
+  color: #fff;
+  font-family: "DM Serif Display", Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(2.6rem, 6.2vw, 5.75rem);
+  line-height: 1.02;
+  letter-spacing: 0.005em;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.25);
+}
+
+.hero-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #2a86c4;
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 15px 28px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.hero-button:hover {
+  background: #2274ab;
+}
+
+.hero-button-arrow {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.2s;
+}
+
+.hero-button:hover .hero-button-arrow {
+  transform: translateY(2px);
+}
+
+/* Who We Are */
+.about {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 72px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 120px 40px;
+  color: var(--ink);
+}
+
+.about h2 {
+  margin: 0 0 24px;
+  font-family: "DM Serif Display", Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(2.4rem, 4.5vw, 3.75rem);
+  line-height: 1.05;
+}
+
+.about p {
+  margin: 0 0 18px;
+  max-width: 520px;
+  font-size: 1rem;
+  line-height: 1.75;
+  color: #4a5a64;
+}
+
+.about-image {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 28px;
+}
+
+.about-image-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e8eef2;
+  color: #8a9aa4;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Tablet: links move into a full-screen menu behind a round toggle */
+@media (max-width: 1024px) {
+  :root {
+    --nav-pad-y: 16px;
+    --nav-pad-x: 18px;
+  }
+
+  .navbar {
+    display: flex;
+  }
+
+  .nav-links {
+    position: fixed;
+    inset: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: rgba(20, 30, 38, 0.96);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s, visibility 0.25s;
+  }
+
+  .nav-links a {
+    color: #fff;
+    font-size: 1.15rem;
+  }
+
+  .nav-links a:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .nav-links.open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .nav-toggle {
+    display: flex;
+    position: relative;
+    z-index: 1;
+  }
+
+  .nav-toggle[aria-expanded="true"] span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  .nav-toggle[aria-expanded="true"] span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .nav-toggle[aria-expanded="true"] span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  .logo {
+    margin-right: auto;
+  }
+
+  .nav-actions {
+    margin-right: 10px;
+  }
+}
+
+/* Phone: thinner bezel, icons dropped so the button fits */
+@media (max-width: 600px) {
+  :root {
+    --frame: 10px;
+  }
+
+  .hero {
+    border-radius: 22px;
+  }
+
+  :root {
+    --nav-pad-y: 14px;
+    --nav-pad-x: 14px;
+  }
+
+  .logo {
+    gap: 8px;
+  }
+
+  .logo-mark {
+    width: 36px;
+  }
+
+  .logo-top {
+    font-size: 0.5rem;
+    margin-bottom: 3px;
+  }
+
+  .logo-name {
+    font-size: 1.1rem;
+  }
+
+  .nav-icon {
+    display: none;
+  }
+
+  .nav-actions {
+    padding: 4px;
+  }
+
+  .nav-button {
+    font-size: 0.78rem;
+    padding: 8px 16px;
+  }
+
+  .about {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding: 72px 20px;
+  }
+
+  .about-image {
+    aspect-ratio: 4 / 3;
+    border-radius: 22px;
+  }
+
+  .hero-button {
+    font-size: 0.66rem;
+    letter-spacing: 0.06em;
+    padding: 14px 22px;
+  }
+}
+
+/* Small phones: the hero button is the call to action, so drop the header one */
+@media (max-width: 400px) {
+  .nav-actions {
+    display: none;
+  }
+
+  .hero {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .hero-button {
+    gap: 8px;
+    letter-spacing: 0.04em;
+    padding: 14px 18px;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Scroll effects (CSS only, no JavaScript).
+   Browsers without support keep the static layout above.
+   ------------------------------------------------------------------ */
+
+/* Flips from 0 to 1 once the page is scrolled past ~60px (integers round at the halfway point) */
+@property --scrolled {
+  syntax: "<integer>";
+  inherits: true;
+  initial-value: 0;
+}
+
+@supports (animation-timeline: scroll()) {
+  html {
+    animation: scroll-flag linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 120px;
+  }
+
+  @keyframes scroll-flag {
+    to {
+      --scrolled: 1;
+    }
+  }
+
+  /* Bezel fades from frosted to solid white within the first third of a screen */
+  .hero-frame::after {
+    animation: bezel-to-white linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 30vh;
+  }
+
+  @keyframes bezel-to-white {
+    to {
+      background: #fff;
+    }
+  }
+
+  /* Navbar: always pinned flush to the top edge, so its glass bar is never detached.
+     At rest the padding holds the pills where they sit in the framed hero.
+     Past the flag: the items slide up and shrink first, then the glass fills in.
+     Scrolling back reverses it: glass fades out, then the items drop back down. */
+  .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: calc(var(--frame) + var(--nav-pad-y)) calc(var(--frame) + var(--nav-pad-x));
+    --nav-delay: 0.15s;
+    transition: padding 0.3s ease var(--nav-delay);
+  }
+
+  /* The bar's glass lives on a pseudo-element: a backdrop-filter on .navbar itself
+     would trap the fixed full-screen mobile menu inside the bar */
+  .navbar::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    /* Dark tint keeps the white text readable over the white sections below */
+    background: rgba(22, 35, 44, 0.55);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    -webkit-backdrop-filter: var(--glass-blur);
+    backdrop-filter: var(--glass-blur);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  /* Everything that shrinks for the compact bar moves on the same timing */
+  .logo,
+  .logo-mark,
+  .logo-top,
+  .logo-name,
+  .nav-links a,
+  .nav-button {
+    transition: all 0.3s ease var(--nav-delay);
+  }
+
+  .nav-links,
+  .nav-actions,
+  .nav-toggle {
+    /* opacity/visibility keep the mobile menu's fade */
+    transition: background 0.3s ease var(--nav-delay), border-color 0.3s ease var(--nav-delay),
+      padding 0.3s ease var(--nav-delay), width 0.3s ease var(--nav-delay),
+      height 0.3s ease var(--nav-delay), opacity 0.25s, visibility 0.25s;
+  }
+
+  @container style(--scrolled: 1) {
+    .navbar {
+      --nav-delay: 0s;
+      padding-top: 6px;
+      padding-bottom: 6px;
+    }
+
+    .navbar::before {
+      opacity: 1;
+      transition: opacity 0.25s ease 0.2s;
+    }
+
+    .logo {
+      gap: 9px;
+    }
+
+    .logo-mark {
+      width: 34px;
+    }
+
+    .logo-top {
+      font-size: 0.5rem;
+      margin-bottom: 2px;
+    }
+
+    .logo-name {
+      font-size: 1.1rem;
+    }
+
+    /* Pills dissolve into the bar */
+    .nav-actions,
+    .nav-toggle {
+      background: transparent;
+      border-color: transparent;
+    }
+
+    .nav-actions {
+      padding: 3px 3px 3px 14px;
+    }
+
+    .nav-button {
+      padding: 5px 16px;
+    }
+
+    .nav-toggle {
+      width: 34px;
+      height: 34px;
+    }
+  }
+
+  /* Desktop only: on tablet/phone the links are the full-screen menu, not a pill */
+  @media (min-width: 1025px) {
+    @container style(--scrolled: 1) {
+      .nav-links {
+        background: transparent;
+        border-color: transparent;
+        padding: 3px;
+      }
+
+      .nav-links a {
+        padding: 5px 14px;
+      }
+    }
+  }
+
+  @media (max-width: 600px) {
+    @container style(--scrolled: 1) {
+      .logo {
+        gap: 7px;
+      }
+
+      .logo-mark {
+        width: 28px;
+      }
+
+      .logo-top {
+        font-size: 0.42rem;
+      }
+
+      .logo-name {
+        font-size: 0.95rem;
+      }
+
+      .nav-actions {
+        padding: 3px;
+      }
+    }
+  }
+}
