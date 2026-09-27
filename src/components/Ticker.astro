@@ -1,0 +1,57 @@
+---
+// Placeholder credentials — swap the wordmarks for the practice's real logo
+// files, and confirm the client actually holds each one before this goes live.
+// URLs verified live on 2026-09-26.
+const certifications = [
+  {
+    name: "ABO",
+    variant: "wide",
+    url: "https://www.americanboardortho.com/",
+  },
+  { name: "Invisalign", variant: "geo", url: "https://www.invisalign.com/" },
+  {
+    name: "American Dental Association",
+    variant: "serif",
+    url: "https://www.ada.org/",
+  },
+  { name: "AAO", variant: "wide", url: "https://aaoinfo.org/" },
+  { name: "iTero", variant: "geo", url: "https://itero.com/" },
+  {
+    name: "Damon System",
+    variant: "sans",
+    url: "https://damonbraces.com/",
+  },
+  { name: "CDA", variant: "wide", url: "https://www.cda.org/" },
+  { name: "AACD", variant: "sans", url: "https://aacd.com/" },
+];
+---
+
+<section class="ticker">
+  <p class="ticker-label">Proudly backed by…</p>
+  <div class="ticker-viewport">
+    <div class="ticker-track">
+      {
+        /* Rendered twice so the track can loop seamlessly. The copy is hidden
+           from screen readers, and its links are taken out of the tab order so
+           keyboard users do not land on a duplicate they cannot see. */
+        [0, 1].map((copy) => (
+          <ul class="ticker-group" aria-hidden={copy === 1 ? "true" : undefined}>
+            {certifications.map(({ name, variant, url }) => (
+              <li>
+                <a
+                  class={`tk-${variant}`}
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  tabindex={copy === 1 ? "-1" : undefined}
+                >
+                  {name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        ))
+      }
+    </div>
+  </div>
+</section>

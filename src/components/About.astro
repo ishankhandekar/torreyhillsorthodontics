@@ -1,16 +1,20 @@
+---
+import TextLink from "./TextLink.astro";
+---
+
 <section class="about" id="about">
   <div class="about-text">
-    <h2>Who We Are</h2>
-    <p>
-      At Torrey Hills Orthodontics, we believe a great smile should feel as good
-      as it looks. Our team works with children, teens and adults to design
-      treatment around each patient’s goals, schedule and comfort.
+    <p class="about-eyebrow">Our Practice</p>
+    <h2 class="section-heading">
+      Rooted in Torrey Hills. Dedicated to your confidence.
+    </h2>
+    <p class="section-statement">
+      As a truly independent, local practice, we combine advanced digital
+      technology with the trusted, personalized attention of a neighborhood
+      doctor so we can craft you the smile you deserve.
     </p>
-    <p>
-      From your first free consultation to the day your braces or aligners come
-      off, you’ll have a team that explains every step, answers every question
-      and celebrates your progress with you.
-    </p>
+    {/* Placeholder: #team has no destination yet */}
+    <TextLink href="#team" label="Meet our Professionals" />
   </div>
   {/* Placeholder: swap for an <img> or astro:assets <Image /> once the real photo arrives */}
   <div class="about-image about-image-placeholder">Photo</div>

@@ -1,0 +1,53 @@
+---
+import TextLink from "./TextLink.astro";
+
+// Placeholder destinations — no treatment pages exist yet.
+const treatments = [
+  {
+    title: "Clear Aligners",
+    copy: "Custom-molded transparent trays built to straighten your teeth discreetly.",
+    href: "#clear-aligners",
+  },
+  {
+    title: "Advanced Braces",
+    copy: "Low-profile ceramic and aesthetic metal brackets engineered for fast precision.",
+    href: "#advanced-braces",
+  },
+  {
+    title: "Jaw Orthopedics",
+    copy: "Specialized growth appliances designed to comfortably align developing jaws.",
+    href: "#jaw-orthopedics",
+  },
+  {
+    title: "Retention Care",
+    copy: "Custom-fit clear and fixed retainers to permanently preserve your alignment.",
+    href: "#retention-care",
+  },
+];
+---
+
+<section class="treatments" id="services">
+  <div class="treatments-inner">
+    <h2 class="section-heading">Personalized Treatments for Every Smile</h2>
+    <p class="section-statement">
+      Take a quick look at the core treatments and corrective tools we use to
+      deliver precise, comfortable results.
+    </p>
+
+    <ol class="treatment-grid">
+      {
+        treatments.map(({ title, copy, href }, i) => (
+          <li class="treatment">
+            {/* The list is already ordered, so the numeral is decoration */}
+            <span class="treatment-num" aria-hidden="true">
+              {String(i + 1).padStart(2, "0")}
+            </span>
+            <h3 class="treatment-title">{title}</h3>
+            <p class="treatment-copy">{copy}</p>
+            <TextLink href={href} />
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
