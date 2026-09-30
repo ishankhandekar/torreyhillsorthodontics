@@ -32,6 +32,25 @@ const asset = (path: string) =>
   </body>
 </html>
 
+<script>
+  import Lenis from "lenis";
+
+  // Touch scrolling already has physics and runs off the main thread, so
+  // smoothing it there makes things worse, not better. Reduced-motion users
+  // have explicitly asked for none of this.
+  const coarse = window.matchMedia("(pointer: coarse)").matches;
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (!coarse && !reduced) {
+    // lerp rather than a fixed duration: each frame closes a share of the
+    // remaining distance, so it moves off quickly and settles rather than
+    // stopping. Lenis normalises the rate, so 120Hz matches 60Hz.
+    new Lenis({ lerp: 0.1, smoothWheel: true, autoRaf: true });
+  }
+</script>
+
+
+
 <style is:global>
   *,
   *::before,
@@ -40,7 +59,8 @@ const asset = (path: string) =>
   }
 
   :root {
-    /* Width of the white bezel around the hero */
+    /* Inset of the navbar from the viewport edge. It was the hero bezel's
+       width first, which is why the scrolled navbar padding still adds it. */
     --frame: 14px;
     --ink: #16232c;
     /* Brand blue: 3.96:1 on white, so it is only AA-safe for large text
@@ -54,14 +74,19 @@ const asset = (path: string) =>
     --band: #f7f9fa;
     /* Midnight navy, pitched near the hero's own dark wash so the two dark
        areas of the page read as the same colour family */
-    --midnight: #0c2033;
+    --midnight: #3a506b;
+    /* The office tour, one step deeper than the treatments band. Same hue and
+       saturation as --midnight, dropped from 32% to 20% lightness: a 1.59:1
+       step, which reads as a deliberate change without the two sections
+       looking unrelated. */
+    --midnight-deep: #243142;
     --hairline: rgba(22, 35, 44, 0.12);
     /* Frosted-glass surface shared by the nav pills and the menu toggle */
     --glass-bg: rgba(255, 255, 255, 0.16);
     --glass-border: rgba(255, 255, 255, 0.28);
     --glass-blur: blur(14px) saturate(140%);
     /* Navbar inner spacing (the scroll effect adds --frame on top of this) */
-    --nav-pad-y: 20px;
+    --nav-pad-y: 10px;
     --nav-pad-x: 24px;
   }
 
@@ -89,14 +114,14 @@ const asset = (path: string) =>
     justify-self: start;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     color: #fff;
     text-decoration: none;
     white-space: nowrap;
   }
 
   .logo-mark {
-    width: 52px;
+    width: 42px;
     height: auto;
     fill: #fff;
   }
@@ -116,15 +141,15 @@ const asset = (path: string) =>
   }
 
   .logo-top {
-    font-size: 0.68rem;
+    font-size: 0.58rem;
     font-weight: 500;
-    letter-spacing: 0.32em;
+    letter-spacing: 0.3em;
     text-transform: uppercase;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
   }
 
   .logo-name {
-    font-size: 1.55rem;
+    font-size: 1.28rem;
     font-weight: 400;
     letter-spacing: 0.02em;
   }
@@ -132,7 +157,7 @@ const asset = (path: string) =>
   .nav-links {
     display: flex;
     gap: 2px;
-    padding: 6px;
+    padding: 5px;
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
     -webkit-backdrop-filter: var(--glass-blur);
@@ -143,9 +168,9 @@ const asset = (path: string) =>
   .nav-links a {
     color: #fff;
     text-decoration: none;
-    font-size: 0.85rem;
+    font-size: 0.78rem;
     font-weight: 500;
-    padding: 9px 16px;
+    padding: 7px 14px;
     border-radius: 999px;
     transition: background 0.2s;
   }
@@ -158,8 +183,8 @@ const asset = (path: string) =>
     justify-self: end;
     display: flex;
     align-items: center;
-    gap: 14px;
-    padding: 6px 6px 6px 18px;
+    gap: 12px;
+    padding: 5px 5px 5px 15px;
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
     -webkit-backdrop-filter: var(--glass-blur);
@@ -172,9 +197,32 @@ const asset = (path: string) =>
     color: #fff;
   }
 
+  .nav-phone {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.78rem;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: opacity 0.2s;
+  }
+
+  .nav-phone:hover {
+    opacity: 0.75;
+  }
+
+  .nav-phone svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+    fill: currentColor;
+  }
+
   .nav-icon svg {
-    width: 16px;
-    height: 16px;
+    width: 15px;
+    height: 15px;
     fill: currentColor;
   }
 
@@ -182,9 +230,9 @@ const asset = (path: string) =>
     color: #fff;
     background: var(--ink);
     text-decoration: none;
-    font-size: 0.85rem;
+    font-size: 0.78rem;
     font-weight: 500;
-    padding: 9px 20px;
+    padding: 7px 17px;
     border-radius: 999px;
     transition: background 0.2s;
   }
@@ -199,8 +247,8 @@ const asset = (path: string) =>
     align-items: center;
     justify-content: center;
     gap: 5px;
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    height: 40px;
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
     -webkit-backdrop-filter: var(--glass-blur);
@@ -216,47 +264,23 @@ const asset = (path: string) =>
     transition: transform 0.25s, opacity 0.25s;
   }
 
-  /* Frosted bezel: a blurred, lightened copy of the photo shows around the card */
+  /* Only a positioning context for the navbar now that the bezel is gone */
   .hero-frame {
     position: relative;
-    padding: var(--frame);
-    overflow: hidden;
   }
 
-  .hero-frame::before,
-  .hero-frame::after {
-    content: "";
-    position: absolute;
-  }
-
-  .hero-frame::before {
-    /* Oversized so the blur doesn't fade to transparent at the edges */
-    inset: -60px;
-    background: var(--hero-image) 35% 30% / cover no-repeat;
-    filter: blur(24px) saturate(140%);
-  }
-
-  .hero-frame::after {
-    inset: 0;
-    background: rgba(255, 255, 255, 0.3);
-  }
-
-  /* Hero: a rounded photo card inset inside the bezel */
+  /* Full-bleed photo. The copy stacks at the bottom with the credential
+     marquee beneath it, so the whole lower band is one left-aligned column. */
   .hero {
     position: relative;
     z-index: 1;
-    height: calc(100vh - 2 * var(--frame));
-    height: calc(100svh - 2 * var(--frame));
-    border-radius: 28px;
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35);
+    height: 100vh;
+    height: 100svh;
     overflow: hidden;
     background: var(--hero-image) 35% 30% / cover no-repeat;
-    /* Content sits in the lower part of the photo so it never covers her smile */
     display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    text-align: center;
-    padding: 0 24px 12vh;
+    flex-direction: column;
+    justify-content: flex-end;
   }
 
   /* Darkens the top of the photo so the white logo stays readable against the bright sky */
@@ -273,22 +297,30 @@ const asset = (path: string) =>
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(rgba(10, 30, 45, 0.1) 40%, rgba(10, 30, 45, 0.45));
+    background: linear-gradient(
+      rgba(10, 30, 45, 0.1) 30%,
+      rgba(10, 30, 45, 0.55) 74%,
+      rgba(10, 30, 45, 0.72)
+    );
   }
 
   .hero-content {
     position: relative;
     z-index: 1;
-    max-width: 900px;
+    /* Deliberately narrow so the headline wraps into a tight block rather
+       than running across the photo */
+    max-width: 680px;
+    /* Lines the headline up with the logo in the navbar */
+    padding: 0 calc(var(--frame) + var(--nav-pad-x)) 11vh;
   }
 
   .hero h1 {
-    margin: 0 0 40px;
+    margin: 0 0 28px;
     color: #fff;
     font-family: "DM Serif Display", Georgia, serif;
     font-weight: 400;
-    font-size: clamp(2.6rem, 6.2vw, 5.75rem);
-    line-height: 1.02;
+    font-size: clamp(2.2rem, 4.6vw, 4.2rem);
+    line-height: 1.05;
     letter-spacing: 0.005em;
     text-shadow: 0 2px 24px rgba(0, 0, 0, 0.25);
   }
@@ -300,11 +332,11 @@ const asset = (path: string) =>
     background: var(--blue-dark);
     color: #fff;
     text-decoration: none;
-    font-size: 0.72rem;
+    font-size: 0.68rem;
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    padding: 15px 28px;
+    padding: 12px 22px;
     border-radius: 8px;
     transition: background 0.2s;
   }
@@ -326,20 +358,22 @@ const asset = (path: string) =>
   }
 
   .hero-button:hover .hero-button-arrow {
-    transform: translateY(2px);
+    transform: translate(2px, -2px);
   }
 
-  /* Certification ticker */
+  /* Certification ticker — lives at the foot of the hero, over the photo */
   .ticker {
-    background: var(--band);
-    padding: 46px 0 50px;
+    position: relative;
+    z-index: 1;
+    padding: 0 0 30px;
     overflow: hidden;
   }
 
   .ticker-label {
-    margin: 0 0 30px;
-    text-align: center;
-    color: #5f6e78;
+    margin: 0 0 16px;
+    /* Same left edge as the headline and the logo */
+    padding-left: calc(var(--frame) + var(--nav-pad-x));
+    color: rgba(255, 255, 255, 0.78);
     font-size: 0.72rem;
     font-weight: 600;
     letter-spacing: 0.18em;
@@ -390,10 +424,9 @@ const asset = (path: string) =>
     display: flex;
   }
 
-  /* Same soft pill on hover as the navbar links, inverted for the light band */
+  /* Same soft pill on hover as the navbar links */
   .ticker-group a {
-    /* 4.7:1 on the band — the muted logo-wall look while still clearing AA */
-    color: #63727d;
+    color: rgba(255, 255, 255, 0.88);
     text-decoration: none;
     white-space: nowrap;
     line-height: 1;
@@ -403,12 +436,12 @@ const asset = (path: string) =>
   }
 
   .ticker-group a:hover {
-    background: rgba(22, 35, 44, 0.06);
+    background: rgba(255, 255, 255, 0.16);
   }
 
   .ticker-group a:focus-visible {
-    background: rgba(22, 35, 44, 0.06);
-    outline: 2px solid var(--blue-dark);
+    background: rgba(255, 255, 255, 0.16);
+    outline: 2px solid #fff;
     outline-offset: 2px;
   }
 
@@ -469,6 +502,17 @@ const asset = (path: string) =>
     color: var(--ink);
   }
 
+  /* Small label above a section heading */
+  .section-eyebrow {
+    margin: 0 0 14px;
+    color: var(--blue-dark);
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
   /* Shared by every section heading so they cannot drift apart */
   .section-heading {
     margin: 0 0 24px;
@@ -488,24 +532,26 @@ const asset = (path: string) =>
     color: #3d4b55;
     font-family: "Lora", Georgia, serif;
     font-weight: 400;
-    font-size: clamp(1.1rem, 1.85vw, 1.45rem);
-    line-height: 1.5;
+    /* Sized for a paragraph rather than a single line — the larger setting
+       read as a pull quote once there was more than one sentence in it. The
+       looser leading keeps the serif comfortable at this size. */
+    font-size: clamp(1rem, 1.3vw, 1.15rem);
+    line-height: 1.65;
   }
 
-  .about p {
-    margin: 0 0 18px;
+  .about .section-statement {
     max-width: 520px;
   }
 
-  /* Eyebrow label above the heading (class-scoped so it beats `.about p`) */
-  .about .about-eyebrow {
-    margin-bottom: 14px;
-    color: var(--blue-dark);
-    font-size: 0.72rem;
-    font-weight: 600;
-    line-height: 1.4;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
+  /* A supporting line under a heading, rather than a statement in its own
+     right: Jost — the same sans as the Learn More links and tour captions —
+     at a much smaller size than .section-statement's serif. Shared so the
+     dark sections cannot drift apart; colour and spacing stay per-section. */
+  .section-subline {
+    margin: 0;
+    font-family: "Jost", "Poppins", sans-serif;
+    font-size: clamp(0.9rem, 1.05vw, 1rem);
+    line-height: 1.6;
   }
 
   .text-link {
@@ -553,28 +599,15 @@ const asset = (path: string) =>
     border-radius: 1000px 1000px 0 0;
   }
 
+  /* PLACEHOLDER: standing in with the hero shot until the real photo lands */
   .about-image-placeholder {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #e8eef2;
-    color: #8a9aa4;
-    font-size: 0.85rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+    background: var(--hero-image) center / cover no-repeat;
   }
 
   /* Treatments */
   .treatments {
-    background: var(--midnight);
+    background: var(--band);
     padding: 104px 0;
-    /* Redefining the token flips every rule inside this section to a light
-       hairline, including the ones in the responsive blocks below */
-    --hairline: rgba(255, 255, 255, 0.18);
-  }
-
-  .treatments .section-heading {
-    color: #fff;
   }
 
   .treatments-inner {
@@ -583,10 +616,10 @@ const asset = (path: string) =>
     padding: 0 40px;
   }
 
-  .treatments .section-statement {
-    max-width: 640px;
+  .treatments .section-subline {
+    max-width: 560px;
     margin-bottom: 56px;
-    color: rgba(255, 255, 255, 0.85);
+    color: #3d4b55;
   }
 
   /* Hairlines come from the grid's top border plus a left border per column,
@@ -617,10 +650,8 @@ const asset = (path: string) =>
     padding-right: 0;
   }
 
-  /* Secondary text is white held back by opacity rather than a grey, so the
-     hierarchy survives without introducing an off-palette colour */
   .treatment-num {
-    color: rgba(255, 255, 255, 0.55);
+    color: var(--muted);
     font-size: 0.72rem;
     font-weight: 500;
     letter-spacing: 0.12em;
@@ -628,32 +659,979 @@ const asset = (path: string) =>
 
   .treatment-title {
     margin: 26px 0 12px;
-    color: #fff;
+    color: var(--ink);
     font-size: 1.05rem;
     font-weight: 600;
     line-height: 1.3;
   }
 
   .treatment-copy {
-    margin: 0 0 22px;
-    color: rgba(255, 255, 255, 0.72);
+    margin: 0 0 18px;
+    color: #3d4b55;
     font-size: 0.9rem;
     line-height: 1.65;
   }
 
-  .treatments .text-link {
-    color: #fff;
-    border-bottom-color: rgba(255, 255, 255, 0.4);
+  /* Short fact fragments, so they read as a spec list rather than prose */
+  .treatment-points {
+    margin: 0 0 22px;
+    padding: 0;
+    list-style: none;
   }
 
-  .treatments .text-link:hover {
-    color: #fff;
-    border-bottom-color: #fff;
+  .treatment-points li {
+    position: relative;
+    padding-left: 15px;
+    color: #3d4b55;
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+
+  .treatment-points li + li {
+    margin-top: 7px;
+  }
+
+  .treatment-points li::before {
+    content: "";
+    position: absolute;
+    top: 0.58em;
+    left: 0;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--blue-dark);
   }
 
   /* Pins every Learn More to the same baseline despite uneven copy lengths */
   .treatment .text-link {
     margin-top: auto;
+  }
+
+  /* Office tour */
+  .tour {
+    background: #fff;
+    padding: 104px 0;
+  }
+
+  .tour-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  .tour-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 28px;
+  }
+
+  .tour .section-heading {
+    margin: 0;
+  }
+
+  /* Keeps the heading and its subline together on the left, so space-between
+     still pushes the CTA to the right edge */
+  .tour-headings {
+    min-width: 0;
+  }
+
+  .tour .section-subline {
+    margin-top: 10px;
+    color: #3d4b55;
+  }
+
+  .tour-cta {
+    flex-shrink: 0;
+    padding: 15px 28px;
+    border: 1px solid var(--blue-dark);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--blue-dark);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .tour-cta:hover {
+    background: var(--blue-dark);
+    color: #fff;
+  }
+
+  /* Each room is one full photo card, with its neighbours peeking in at the
+     sides. Built on scroll-snap rather than transforms, so it swipes natively
+     on touch and still works if the script never runs. */
+  .tour-carousel {
+    position: relative;
+    margin-top: 48px;
+    /* Sized so the centred card lines up with the page container while its
+       neighbours run off both edges of the screen */
+    --tour-side: max(20px, calc((100% - 1120px) / 2));
+  }
+
+  .tour-track {
+    display: flex;
+    gap: 20px;
+    margin: 0;
+    padding: 0 var(--tour-side);
+    list-style: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+  }
+
+  .tour-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tour-slide {
+    position: relative;
+    flex: 0 0 100%;
+    height: clamp(360px, 46vw, 560px);
+    scroll-snap-align: center;
+    border-radius: 4px;
+    overflow: hidden;
+    /* PLACEHOLDER: every card is the hero shot until the real photos arrive */
+    background: var(--hero-image) center / cover no-repeat;
+  }
+
+  /* The copy sits at the top of the card now, so the scrim runs the other way */
+  .tour-slide::after {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 68%;
+    /* Holds most of its weight through the text block before falling away, so
+       the copy stays readable over a pale photo as well as a dark one */
+    background: linear-gradient(
+      rgba(6, 14, 20, 0.86) 0%,
+      rgba(6, 14, 20, 0.66) 38%,
+      rgba(6, 14, 20, 0) 100%
+    );
+  }
+
+  .tour-slide-text {
+    position: absolute;
+    inset: 34px 34px auto;
+    z-index: 1;
+  }
+
+  .tour-room {
+    margin: 0;
+    color: #fff;
+    font-family: "Jost", "Poppins", sans-serif;
+    font-weight: 500;
+    font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+    line-height: 1.15;
+  }
+
+  .tour-blurb {
+    margin: 10px 0 0;
+    max-width: 34ch;
+    color: #fff;
+    font-family: "Jost", "Poppins", sans-serif;
+    font-size: clamp(0.9rem, 1.05vw, 1rem);
+    line-height: 1.55;
+  }
+
+  /* Centred on the card's edge, the way the reference sits them */
+  .tour-arrow {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    padding: 0;
+    transform: translateY(-50%);
+    border: 1px solid var(--hairline);
+    border-radius: 50%;
+    background: #fff;
+    color: var(--ink);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .tour-arrow:hover {
+    background: var(--ink);
+    color: #fff;
+  }
+
+  .tour-arrow-prev {
+    left: calc(var(--tour-side) - 23px);
+  }
+
+  .tour-arrow-next {
+    right: calc(var(--tour-side) - 23px);
+  }
+
+  .tour-arrow svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .tour-dots {
+    position: absolute;
+    right: 0;
+    bottom: 22px;
+    left: 0;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    gap: 9px;
+  }
+
+  .tour-dot {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    /* The ring keeps the dots legible over a pale photo as well as a dark one */
+    background: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 0 1px rgba(6, 14, 20, 0.25);
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .tour-dot.is-active {
+    background: #fff;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tour-track {
+      scroll-behavior: auto;
+    }
+  }
+
+  /* Locations */
+  .locations {
+    background: #fff;
+    padding: 104px 0;
+  }
+
+  .locations-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  .locations-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 28px;
+    margin-bottom: 20px;
+  }
+
+  .locations .section-heading {
+    margin: 0;
+  }
+
+  .locations-tagline {
+    flex-shrink: 0;
+    margin: 0;
+    color: var(--muted);
+    font-family: "Jost", "Poppins", sans-serif;
+    font-size: clamp(0.9rem, 1.05vw, 1rem);
+    line-height: 1.5;
+  }
+
+  /* With a single office this is a label, not a tab — so it is not a button */
+  .location-pill {
+    display: inline-block;
+    margin: 0 0 24px;
+    padding: 11px 22px;
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+    background: var(--band);
+    color: var(--ink);
+    font-size: 0.95rem;
+  }
+
+  .location-card {
+    display: flex;
+    gap: 0;
+    border-radius: 16px;
+    background: var(--band);
+    overflow: hidden;
+  }
+
+  /* Positioned so the iframe can fill it: a percentage height needs a parent
+     with a definite one, which a stretched flex item does not give it */
+  .location-map {
+    position: relative;
+    flex: 0 0 42%;
+    min-height: 420px;
+    background: #e8eef2;
+  }
+
+  /* Lenis ships a stylesheet that kills pointer events on every iframe so they
+     cannot swallow the wheel. We do not load it — nothing else in it applies
+     here, and a map you cannot pan is worth less than the scroll-trap costs —
+     so this keeps the map usable if that sheet is ever added back. */
+  .lenis.lenis-smooth .location-map iframe {
+    pointer-events: auto;
+  }
+
+  .location-map iframe {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .location-body {
+    display: flex;
+    flex: 1 1 0;
+    min-width: 0;
+    flex-direction: column;
+    padding: 34px 36px;
+  }
+
+  .location-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .location-name {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  .location-city {
+    margin: 4px 0 0;
+    color: var(--ink);
+    font-size: clamp(1.4rem, 2.2vw, 1.85rem);
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .location-directions {
+    flex-shrink: 0;
+    padding: 13px 22px;
+    border: 1px solid var(--hairline);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+
+  .location-directions:hover {
+    border-color: var(--ink);
+    background: var(--ink);
+    color: #fff;
+  }
+
+  .location-details {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px;
+    margin-top: 34px;
+  }
+
+  .location-label {
+    margin: 0 0 10px;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  .location-value {
+    margin: 0;
+    color: var(--ink);
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+
+  .location-value a {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+
+  .location-value a:hover {
+    border-bottom-color: var(--ink);
+  }
+
+  /* Pushed to the bottom so the row sits on the card's baseline */
+  .location-footer {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-top: auto;
+    padding-top: 26px;
+    border-top: 1px solid var(--hairline);
+  }
+
+  .location-today {
+    margin: 0 auto 0 0;
+    color: var(--ink);
+    font-size: 0.95rem;
+  }
+
+  .location-hours {
+    position: relative;
+  }
+
+  .location-hours summary {
+    color: var(--muted);
+    font-size: 0.95rem;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .location-hours summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .location-hours summary:hover {
+    color: var(--ink);
+  }
+
+  /* Floated above the link rather than pushed into the row: in the stacked
+     layout a flex-basis would size the height, not the width, and the list
+     would spill out of the card */
+  .location-hours ul {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 12px);
+    z-index: 2;
+    width: max-content;
+    max-width: 78vw;
+    margin: 0;
+    padding: 14px 18px;
+    border: 1px solid var(--hairline);
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 10px 30px rgba(22, 35, 44, 0.12);
+    list-style: none;
+  }
+
+  .location-hours li {
+    display: flex;
+    justify-content: space-between;
+    gap: 28px;
+    padding: 5px 0;
+    color: var(--ink);
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+
+  .location-hours-days {
+    color: var(--muted);
+  }
+
+  .location-hours-time em {
+    margin-left: 7px;
+    color: var(--muted);
+    font-size: 0.82rem;
+    font-style: normal;
+  }
+
+  .location-disclaimer {
+    flex-shrink: 0;
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  /* FAQ */
+  .faq {
+    background: var(--band);
+    padding: 104px 0;
+  }
+
+  .faq-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: 64px;
+  }
+
+  /* Top-aligned rather than stretched to the list's height. Not sticky: the
+     FAQ is the last section and shorter than a typical viewport, so there is
+     never anything for it to stick against. */
+  .faq-intro {
+    align-self: start;
+  }
+
+  .faq-intro .section-heading {
+    margin-bottom: 18px;
+  }
+
+  .faq-intro .section-subline {
+    max-width: 330px;
+    color: #3d4b55;
+  }
+
+  .faq-item {
+    border-top: 1px solid var(--hairline);
+  }
+
+  .faq-item:last-child {
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .faq-item summary {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 22px 0;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .faq-item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  /* DM Serif Display is the heavy serif in the system. Its single cut IS the
+     heavy one, so the weight stays at 400 — asking for 600 here would make the
+     browser smear a fake bold over an already-thick face. */
+  .faq-question {
+    color: var(--ink);
+    font-family: "DM Serif Display", Georgia, serif;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.4;
+    transition: color 0.2s;
+  }
+
+  .faq-item summary:hover .faq-question {
+    color: var(--blue-dark);
+  }
+
+  .faq-item summary:focus-visible {
+    outline: 2px solid var(--blue-dark);
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+
+  .faq-icon {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    margin-top: 4px;
+    fill: none;
+    stroke: var(--blue-dark);
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.25s ease;
+  }
+
+  .faq-item[open] .faq-icon {
+    transform: rotate(180deg);
+  }
+
+  .faq-answer {
+    margin: 0;
+    padding: 0 40px 24px 0;
+    color: #3d4b55;
+    font-size: 0.92rem;
+    line-height: 1.7;
+  }
+
+  /* Native <details> snaps open. Where the browser can animate to a keyword
+     size it slides instead; everywhere else it just opens. */
+  @supports (interpolate-size: allow-keywords) {
+    .faq-list {
+      interpolate-size: allow-keywords;
+    }
+
+    .faq-item::details-content {
+      block-size: 0;
+      overflow: hidden;
+      transition: block-size 0.28s ease, content-visibility 0.28s allow-discrete;
+    }
+
+    .faq-item[open]::details-content {
+      block-size: auto;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq-icon,
+    .faq-item::details-content {
+      transition: none;
+    }
+  }
+
+  /* Closing call to action */
+  /* Padded top and bottom so the card floats in white rather than butting
+     against the grey FAQ band above it */
+  .consult {
+    background: #fff;
+    padding: 104px 0;
+  }
+
+  .consult-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  /* The one dark surface left on the page, so the last thing you scroll to
+     reads as the close rather than another band of content */
+  .consult-card {
+    padding: 92px 40px;
+    border-radius: 16px;
+    background: var(--ink);
+    text-align: center;
+  }
+
+  .consult-heading {
+    margin: 0 0 18px;
+    color: #fff;
+    font-family: "DM Serif Display", Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(1.9rem, 3.4vw, 2.9rem);
+    line-height: 1.12;
+  }
+
+  .consult-copy {
+    margin: 0 auto 32px;
+    max-width: 520px;
+    color: rgba(255, 255, 255, 0.78);
+    font-family: "Jost", "Poppins", sans-serif;
+    font-size: clamp(0.9rem, 1.05vw, 1rem);
+    line-height: 1.65;
+  }
+
+  .consult-button {
+    display: inline-block;
+    padding: 14px 26px;
+    border-radius: 8px;
+    background: var(--blue-dark);
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+
+  .consult-button:hover {
+    background: var(--blue-deep);
+  }
+
+  .consult-button:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 3px;
+  }
+
+  /* Footer */
+  .footer {
+    background: var(--band);
+    border-top: 1px solid var(--hairline);
+    padding: 76px 0 0;
+  }
+
+  .footer-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+    gap: 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px 64px;
+  }
+
+  /* The mark is white in the navbar, so the footer paints it back to ink */
+  .footer .logo {
+    color: var(--ink);
+  }
+
+  .footer .logo-mark {
+    width: 46px;
+    fill: var(--ink);
+  }
+
+  .footer .logo-wire {
+    stroke: var(--ink);
+  }
+
+  .footer-blurb {
+    margin: 22px 0 18px;
+    max-width: 280px;
+    color: #3d4b55;
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  .footer-address {
+    color: var(--muted);
+    font-size: 0.88rem;
+    font-style: normal;
+    line-height: 1.85;
+  }
+
+  .footer-address a {
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-address a:hover {
+    color: var(--blue-dark);
+  }
+
+  .footer-nav {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 32px;
+  }
+
+  .footer-group-title {
+    margin: 0 0 16px;
+    color: var(--blue-dark);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .footer-group ul,
+  .footer-legal {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .footer-group li + li {
+    margin-top: 10px;
+  }
+
+  .footer-group a {
+    color: #3d4b55;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+  }
+
+  .footer-group a:hover {
+    color: var(--blue-dark);
+  }
+
+  .footer-base {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 22px 40px 26px;
+    border-top: 1px solid var(--hairline);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+  }
+
+  .footer-copyright {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.82rem;
+  }
+
+  .footer-legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 22px;
+  }
+
+  .footer-legal a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.82rem;
+    transition: color 0.2s;
+  }
+
+  .footer-legal a:hover {
+    color: var(--blue-dark);
+  }
+
+  /* Testimonials */
+  .testimonials {
+    background: var(--band);
+    padding: 120px 0;
+  }
+
+  .testimonials-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  /* A little more air than the default, since the quote below it is large */
+  .testimonials .section-eyebrow {
+    margin-bottom: 26px;
+  }
+
+  /* Every slide occupies the same grid cell, so the track keeps the height of
+     the tallest review and the bars below never jump between rotations */
+  .testimonial-track {
+    display: grid;
+  }
+
+  .testimonial {
+    grid-area: 1 / 1;
+    margin: 0;
+    opacity: 0;
+    /* visibility also takes inactive slides out of the accessibility tree */
+    visibility: hidden;
+    transition: opacity 0.5s ease, visibility 0.5s;
+  }
+
+  .testimonial.is-active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Lora rather than the heading serif: at this size DM Serif reads as bold */
+  .testimonial-quote {
+    margin: 0 0 48px;
+    color: var(--ink);
+    font-family: "Lora", Georgia, serif;
+    font-size: clamp(1.6rem, 3.6vw, 2.9rem);
+    line-height: 1.32;
+    /* Hangs the opening quote mark into the margin so the first line of text
+       still lines up flush left with everything below it */
+    text-indent: -0.42em;
+  }
+
+  .testimonial-author {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .testimonial-avatar {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--blue-dark);
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .testimonial-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .testimonial-name {
+    color: var(--ink);
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .testimonial-stars {
+    display: flex;
+    gap: 2px;
+  }
+
+  .testimonial-star {
+    width: 15px;
+    height: 15px;
+    fill: #f4b400;
+  }
+
+  .testimonial-source {
+    color: var(--muted);
+    font-size: 0.82rem;
+  }
+
+  .testimonial-bars {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 64px;
+  }
+
+  /* The button is 24px tall for a usable target; the visible rule is 2px */
+  .testimonial-bar {
+    position: relative;
+    height: 24px;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+
+  .testimonial-bar::before {
+    content: "";
+    position: absolute;
+    inset: calc(50% - 1px) 0 auto;
+    height: 2px;
+    background: rgba(22, 35, 44, 0.15);
+  }
+
+  .testimonial-bar-fill {
+    position: absolute;
+    inset: calc(50% - 1px) auto auto 0;
+    height: 2px;
+    width: 0;
+    background: var(--ink);
+    /* Only used when the bars reset at wrap-around; the running animation
+       takes over the width while a bar is active */
+    transition: width 0.35s ease;
+  }
+
+  /* Bars already passed stay lit, so the row reads as progress through the set */
+  .testimonial-bar.is-filled .testimonial-bar-fill {
+    width: 100%;
+  }
+
+  .testimonial-bar.is-active .testimonial-bar-fill {
+    animation: testimonial-bar-fill 7s linear forwards;
+  }
+
+  @keyframes testimonial-bar-fill {
+    to {
+      width: 100%;
+    }
+  }
+
+  .testimonial-bar:focus-visible {
+    outline: 2px solid var(--blue-dark);
+    outline-offset: 3px;
+  }
+
+  /* No animation means no animationend, so rotation stops and the bars become
+     plain manual controls */
+  @media (prefers-reduced-motion: reduce) {
+    .testimonial {
+      transition: none;
+    }
+
+    .testimonial-bar.is-active .testimonial-bar-fill {
+      animation: none;
+      width: 100%;
+    }
   }
 
   /* Tablet: links move into a full-screen menu behind a round toggle */
@@ -743,18 +1721,55 @@ const asset = (path: string) =>
     }
   }
 
-  /* Phone: thinner bezel, icons dropped so the button fits */
+  @media (max-width: 900px) {
+    .tour {
+      padding: 72px 0;
+    }
+
+    .tour-inner {
+      padding: 0 20px;
+    }
+
+    .tour-head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 20px;
+    }
+
+    .tour-carousel {
+      margin-top: 32px;
+      --tour-side: 16px;
+    }
+
+    .tour-slide {
+      height: 320px;
+    }
+
+    .tour-slide-text {
+      inset: 24px 24px auto;
+    }
+
+    /* Swiping replaces the arrows once the card is this narrow */
+    .tour-arrow {
+      display: none;
+    }
+  }
+
+  /* The navbar runs out of room here before anything else does */
+  @media (max-width: 1150px) {
+    .nav-phone-number {
+      display: none;
+    }
+  }
+
+  /* Phone: tighter navbar inset, icons dropped so the button fits */
   @media (max-width: 600px) {
     :root {
       --frame: 10px;
     }
 
-    .hero {
-      border-radius: 22px;
-    }
-
     :root {
-      --nav-pad-y: 14px;
+      --nav-pad-y: 10px;
       --nav-pad-x: 14px;
     }
 
@@ -775,7 +1790,8 @@ const asset = (path: string) =>
       font-size: 1.1rem;
     }
 
-    .nav-icon {
+    .nav-icon,
+    .nav-phone {
       display: none;
     }
 
@@ -838,11 +1854,131 @@ const asset = (path: string) =>
       padding: 72px 0;
     }
 
-    .treatments-inner {
+    .treatments-inner,
+    .testimonials-inner {
       padding: 0 20px;
     }
 
-    .treatments .section-statement {
+    .locations {
+      padding: 72px 0;
+    }
+
+    .locations-inner {
+      padding: 0 20px;
+    }
+
+    .location-card {
+      flex-direction: column;
+    }
+
+    .location-map {
+      flex: none;
+      min-height: 260px;
+    }
+
+    .location-body {
+      padding: 26px 22px;
+    }
+
+    .locations-head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .location-head {
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .location-details {
+      grid-template-columns: 1fr;
+      gap: 22px;
+      margin-top: 26px;
+    }
+
+    .location-footer {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .location-today {
+      margin: 0;
+    }
+
+    .location-hours ul {
+      right: auto;
+      left: 0;
+    }
+
+    .faq {
+      padding: 72px 0;
+    }
+
+    .faq-inner {
+      grid-template-columns: 1fr;
+      gap: 32px;
+      padding: 0 20px;
+    }
+
+    .faq-answer {
+      padding-right: 0;
+    }
+
+    .consult {
+      padding: 72px 0;
+    }
+
+    .consult-inner {
+      padding: 0 20px;
+    }
+
+    .consult-card {
+      padding: 56px 24px;
+      border-radius: 12px;
+    }
+
+    .footer {
+      padding-top: 56px;
+    }
+
+    .footer-inner {
+      grid-template-columns: 1fr;
+      gap: 40px;
+      padding: 0 20px 44px;
+    }
+
+    /* Two up rather than three, so the labels stop wrapping */
+    .footer-nav {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 28px;
+    }
+
+    .footer-base {
+      padding: 20px 20px 24px;
+    }
+
+    .testimonials {
+      padding: 80px 0;
+    }
+
+    .testimonial-quote {
+      margin-bottom: 34px;
+    }
+
+    .testimonial-avatar {
+      width: 42px;
+      height: 42px;
+      font-size: 0.85rem;
+    }
+
+    .testimonial-bars {
+      gap: 8px;
+      margin-top: 40px;
+    }
+
+    .treatments .section-subline {
       margin-bottom: 40px;
     }
 
@@ -876,10 +2012,6 @@ const asset = (path: string) =>
       display: none;
     }
 
-    .hero {
-      padding-left: 14px;
-      padding-right: 14px;
-    }
 
     .hero-button {
       gap: 8px;
@@ -910,19 +2042,6 @@ const asset = (path: string) =>
     @keyframes scroll-flag {
       to {
         --scrolled: 1;
-      }
-    }
-
-    /* Bezel fades from frosted to solid white within the first third of a screen */
-    .hero-frame::after {
-      animation: bezel-to-white linear both;
-      animation-timeline: scroll(root);
-      animation-range: 0 30vh;
-    }
-
-    @keyframes bezel-to-white {
-      to {
-        background: #fff;
       }
     }
 

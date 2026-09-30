@@ -4,18 +4,30 @@ import TextLink from "./TextLink.astro";
 
 <section class="about" id="about">
   <div class="about-text">
-    <p class="about-eyebrow">Our Practice</p>
+    <p class="section-eyebrow">Independent in Carmel Valley</p>
     <h2 class="section-heading">
       Rooted in Torrey Hills. Dedicated to your confidence.
     </h2>
+    {/* Dr. Lee's specialty and the practice's independence come from her bio
+        on torreyhillsorthodontics.com; the street is from their contact page.
+        UNVERIFIED — confirm all of this before launch: the year (2011 is a
+        placeholder), which neighborhoods her patients actually come from, and
+        that she is the only orthodontist here. The paragraph leans on that
+        last point, so it falls apart if there are associates. */}
     <p class="section-statement">
-      As a truly independent, local practice, we combine advanced digital
-      technology with the trusted, personalized attention of a neighborhood
-      doctor so we can craft you the smile you deserve.
+      Dr. Judy Lee has been on Carmel Mountain Road since 2011, and most of the
+      families who come through are from a few streets away — Torrey Hills, Del
+      Mar Heights, Pacific Highlands Ranch. Often it is a second sibling.
+      Sometimes it is the parent. The practice is hers rather than a group's,
+      which means there is one orthodontist here and not a rotation: whoever
+      plans your treatment is who adjusts it, every visit, for as long as it
+      takes. That is the argument for a small practice, and the reason this one
+      has stayed small.
     </p>
     {/* Placeholder: #team has no destination yet */}
-    <TextLink href="#team" label="Meet our Professionals" />
+    <TextLink href="#team" label="Learn more about Dr. Lee" />
   </div>
-  {/* Placeholder: swap for an <img> or astro:assets <Image /> once the real photo arrives */}
-  <div class="about-image about-image-placeholder">Photo</div>
+  {/* Placeholder: the hero shot stands in here; swap for an <img> or
+      astro:assets <Image /> once the real photo arrives */}
+  <div class="about-image about-image-placeholder" role="presentation"></div>
 </section>

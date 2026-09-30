@@ -1,0 +1,178 @@
+---
+// PLACEHOLDER photos and copy — swap `name` and `blurb` for the real rooms,
+// and the placeholder span for an <img> / astro:assets <Image />, before this
+// goes to the client. The dot count follows this array.
+const rooms = [
+  {
+    name: "The waiting room",
+    blurb:
+      "Comfortable seating, natural light and room for the whole family while you wait.",
+  },
+  {
+    name: "Treatment bay",
+    blurb:
+      "Open chairs laid out so routine adjustments stay quick and unhurried.",
+  },
+  {
+    name: "Digital scanning suite",
+    blurb:
+      "Digital impressions in a few minutes, with no trays and no discomfort.",
+  },
+  {
+    name: "Consultation room",
+    blurb:
+      "Where treatment plans get mapped out and every question gets answered.",
+  },
+];
+---
+
+<section class="tour" id="tour">
+  <div class="tour-inner">
+    <header class="tour-head">
+      <div class="tour-headings">
+        <h2 class="section-heading">Tour the Office</h2>
+        <p class="section-subline">See what makes our setup special</p>
+      </div>
+      {/* Placeholder: #office-gallery has no destination yet */}
+      <a class="tour-cta" href="#office-gallery">See all photos</a>
+    </header>
+  </div>
+
+  {/* Outside .tour-inner so the cards can bleed past the page gutters */}
+  <div class="tour-carousel">
+    <ul class="tour-track">
+      {
+        rooms.map(({ name, blurb }) => (
+          <li class="tour-slide">
+            <div class="tour-slide-text">
+              <h3 class="tour-room">{name}</h3>
+              <p class="tour-blurb">{blurb}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+
+    <button class="tour-arrow tour-arrow-prev" type="button" aria-label="Previous room">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+    </button>
+    <button class="tour-arrow tour-arrow-next" type="button" aria-label="Next room">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg>
+    </button>
+
+    <div class="tour-dots" role="group" aria-label="Choose a room">
+      {
+        rooms.map(({ name }, i) => (
+          <button
+            class:list={["tour-dot", { "is-active": i === 0 }]}
+            type="button"
+            aria-label={`Show ${name}`}
+            aria-current={i === 0 ? "true" : undefined}
+          />
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  const carousel = document.querySelector<HTMLElement>(".tour-carousel");
+
+  if (carousel) {
+    const track = carousel.querySelector<HTMLElement>(".tour-track");
+    const dots = [...carousel.querySelectorAll<HTMLButtonElement>(".tour-dot")];
+    const prev = carousel.querySelector<HTMLButtonElement>(".tour-arrow-prev");
+    const next = carousel.querySelector<HTMLButtonElement>(".tour-arrow-next");
+
+    if (track && prev && next) {
+      const rooms = [...track.querySelectorAll<HTMLElement>(".tour-slide")];
+      const count = rooms.length;
+
+      // A copy of the last card goes in front of the first, and a copy of the
+      // first goes after the last. Scrolling onto a copy is swapped for the
+      // card it copies without animating, which is what makes the ends meet.
+      const head = rooms[count - 1].cloneNode(true) as HTMLElement;
+      const tail = rooms[0].cloneNode(true) as HTMLElement;
+      [head, tail].forEach((copy) => copy.setAttribute("aria-hidden", "true"));
+      track.prepend(head);
+      track.append(tail);
+
+      // cells[0] copies the last room, cells[count + 1] copies the first
+      const cells = [...track.querySelectorAll<HTMLElement>(".tour-slide")];
+      const roomAt = (i: number) => (i - 1 + count) % count;
+      let cell = 1;
+
+      const mark = (room: number) => {
+        dots.forEach((dot, n) => {
+          dot.classList.toggle("is-active", n === room);
+          if (n === room) dot.setAttribute("aria-current", "true");
+          else dot.removeAttribute("aria-current");
+        });
+      };
+
+      // "auto" leaves the smoothing to the stylesheet, so the reduced-motion
+      // rule there still takes effect
+      const goTo = (i: number, animate = true) => {
+        cell = i;
+        track.scrollTo({
+          left: cells[i].offsetLeft - (track.clientWidth - cells[i].clientWidth) / 2,
+          behavior: animate ? "auto" : "instant",
+        });
+        mark(roomAt(i));
+      };
+
+      const nearest = () => {
+        const centre = track.scrollLeft + track.clientWidth / 2;
+        let best = 1;
+        let bestDistance = Infinity;
+        cells.forEach((slide, i) => {
+          const distance = Math.abs(
+            slide.offsetLeft + slide.clientWidth / 2 - centre,
+          );
+          if (distance < bestDistance) {
+            bestDistance = distance;
+            best = i;
+          }
+        });
+        return best;
+      };
+
+      // Reconciles only once scrolling has settled, so a swipe updates the
+      // dots without fighting a scroll the buttons started
+      let settle: ReturnType<typeof setTimeout>;
+      track.addEventListener(
+        "scroll",
+        () => {
+          clearTimeout(settle);
+          settle = setTimeout(() => {
+            const landed = nearest();
+            if (landed === 0) goTo(count, false);
+            else if (landed === count + 1) goTo(1, false);
+            else if (landed !== cell) {
+              cell = landed;
+              mark(roomAt(landed));
+            }
+          }, 120);
+        },
+        { passive: true },
+      );
+
+      // A click can arrive while we are still sitting on a copy, before the
+      // swap above has run. Reading the copy as the card it stands for keeps
+      // the next index inside the array.
+      const step = (delta: number) => {
+        let from = cell;
+        if (from === 0) from = count;
+        else if (from === count + 1) from = 1;
+        goTo(from + delta);
+      };
+
+      prev.addEventListener("click", () => step(-1));
+      next.addEventListener("click", () => step(1));
+      dots.forEach((dot, i) => dot.addEventListener("click", () => goTo(i + 1)));
+
+      // Open on the real first card rather than the copy sitting in front of it
+      goTo(1, false);
+    }
+  }
+</script>

@@ -2,25 +2,55 @@
 import TextLink from "./TextLink.astro";
 
 // Placeholder destinations — no treatment pages exist yet.
+//
+// PRICES ARE PLACEHOLDERS. They are typical US ranges, not this practice's
+// fees, and they must be replaced with Dr. Lee's real numbers (or pulled
+// entirely) before launch — a patient could reasonably rely on them.
+// Durations and age ranges are typical for each treatment; worth confirming
+// with the practice too.
 const treatments = [
   {
     title: "Clear Aligners",
     copy: "Custom-molded transparent trays built to straighten your teeth discreetly.",
+    points: [
+      "Removable clear trays",
+      "Teens and adults",
+      "12–18 months typical",
+      "Typically $4,000–$7,000",
+    ],
     href: "#clear-aligners",
   },
   {
     title: "Advanced Braces",
     copy: "Low-profile ceramic and aesthetic metal brackets engineered for fast precision.",
+    points: [
+      "Metal or ceramic brackets",
+      "Complex bite problems",
+      "18–30 months typical",
+      "Typically $3,500–$7,000",
+    ],
     href: "#advanced-braces",
   },
   {
     title: "Jaw Orthopedics",
     copy: "Specialized growth appliances designed to comfortably align developing jaws.",
+    points: [
+      "Guides jaw growth",
+      "Children, ages 7–11",
+      "9–18 months, before braces",
+      "Typically $2,000–$4,000",
+    ],
     href: "#jaw-orthopedics",
   },
   {
     title: "Retention Care",
     copy: "Custom-fit clear and fixed retainers to permanently preserve your alignment.",
+    points: [
+      "Holds teeth in place",
+      "After active treatment",
+      "Nightly, long term",
+      "Typically $300–$800",
+    ],
     href: "#retention-care",
   },
 ];
@@ -29,14 +59,14 @@ const treatments = [
 <section class="treatments" id="services">
   <div class="treatments-inner">
     <h2 class="section-heading">Personalized Treatments for Every Smile</h2>
-    <p class="section-statement">
+    <p class="section-subline">
       Take a quick look at the core treatments and corrective tools we use to
       deliver precise, comfortable results.
     </p>
 
     <ol class="treatment-grid">
       {
-        treatments.map(({ title, copy, href }, i) => (
+        treatments.map(({ title, copy, points, href }, i) => (
           <li class="treatment">
             {/* The list is already ordered, so the numeral is decoration */}
             <span class="treatment-num" aria-hidden="true">
@@ -44,6 +74,11 @@ const treatments = [
             </span>
             <h3 class="treatment-title">{title}</h3>
             <p class="treatment-copy">{copy}</p>
+            <ul class="treatment-points">
+              {points.map((point) => (
+                <li>{point}</li>
+              ))}
+            </ul>
             <TextLink href={href} />
           </li>
         ))

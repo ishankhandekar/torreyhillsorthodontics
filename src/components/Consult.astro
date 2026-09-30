@@ -1,0 +1,22 @@
+---
+// The form lives on its own page, which does not exist yet — this link will
+// 404 until /consultation is built.
+const consultationUrl = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/consultation`;
+---
+
+<section class="consult" id="consultation">
+  <div class="consult-inner">
+    <div class="consult-card">
+      <h2 class="consult-heading">
+        Book a visit.<br />Get a straight answer.
+      </h2>
+      <p class="consult-copy">
+        Forty-five minutes with Dr. Lee, a digital scan, and a clear plan with
+        the cost in writing.<br />No referral needed, and no obligation to start.
+      </p>
+      <a class="consult-button" href={consultationUrl}>
+        Schedule a consultation
+      </a>
+    </div>
+  </div>
+</section>

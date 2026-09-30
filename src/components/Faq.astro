@@ -1,0 +1,71 @@
+---
+// PLACEHOLDER questions and answers — written to cover what patients actually
+// ask, but none of it is confirmed with the practice. The fee range in
+// "How much does treatment cost?" is a typical US range, not Dr. Lee's, and
+// must be replaced or pulled before launch.
+const faqs = [
+  {
+    q: "Do I need a referral from my dentist?",
+    a: "No. You can book a consultation directly, and most of our patients do. If your dentist did refer you, bring any recent x-rays along and we will not repeat them unnecessarily.",
+  },
+  {
+    q: "At what age should my child first see an orthodontist?",
+    a: "Around age seven. That is early enough to spot a jaw or spacing problem while the bite is still developing, and most children who come in at that age need nothing more than a check-up a year later.",
+  },
+  {
+    q: "What happens at the first visit?",
+    a: "It takes about forty-five minutes. Dr. Lee examines your teeth and bite, takes a digital scan, and walks you through the options, the timeline and the cost before you leave. There is no charge and no obligation to start.",
+  },
+  {
+    q: "How much does treatment cost?",
+    a: "Most full treatment falls between $3,500 and $7,000 depending on complexity and how long it takes. You will get an exact figure at the consultation, in writing, before anything begins.",
+  },
+  {
+    q: "Do you take my insurance?",
+    a: "We accept most PPO plans and will file the claim for you. Orthodontic coverage is usually a lifetime maximum rather than an annual one, so we check what you have left before quoting you anything.",
+  },
+  {
+    q: "How long will treatment take?",
+    a: "Between twelve and thirty months for most people. Early treatment for children is shorter, usually nine to eighteen months, and complex bite correction sits at the longer end.",
+  },
+  {
+    q: "Clear aligners or braces — which is right for me?",
+    a: "Aligners suit most straightforward cases and are hard to see, but they only work while you are wearing them. Braces handle complicated bite problems better and take no discipline. Dr. Lee will tell you if one is clearly better for your case rather than leaving it to you.",
+  },
+  {
+    q: "What if a bracket breaks or something hurts?",
+    a: "Call the office and we will fit you in, usually the same day. Most breakages are not urgent, but soreness after an adjustment that lasts more than a few days is worth a visit.",
+  },
+];
+---
+
+<section class="faq" id="faq">
+  <div class="faq-inner">
+    <div class="faq-intro">
+      <p class="section-eyebrow">Before you book</p>
+      <h2 class="section-heading">Questions we hear a lot</h2>
+      <p class="section-subline">
+        Still unsure about something? Call the office and ask — we would rather
+        answer it now than at your first visit.
+      </p>
+    </div>
+
+    {/* A shared name makes these an exclusive accordion in browsers that
+        support it; elsewhere they simply open independently */}
+    <div class="faq-list">
+      {
+        faqs.map(({ q, a }) => (
+          <details class="faq-item" name="faq">
+            <summary>
+              <span class="faq-question">{q}</span>
+              <svg class="faq-icon" viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M3 6l5 5 5-5" />
+              </svg>
+            </summary>
+            <p class="faq-answer">{a}</p>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>

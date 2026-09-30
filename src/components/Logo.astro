@@ -1,0 +1,26 @@
+---
+// Shared by the navbar and the footer. Colour comes from the surrounding
+// section — .footer restyles it dark against the band.
+interface Props {
+  href?: string;
+}
+
+const { href = "#" } = Astro.props;
+---
+
+<a href={href} class="logo" aria-label="Torrey Hills Orthodontics home">
+  <svg class="logo-mark" viewBox="2 2 114 78" aria-hidden="true">
+    <path class="logo-wire" d="M8 44C34 86 88 78 110 8"></path>
+    <circle cx="8" cy="44" r="5"></circle>
+    <circle cx="21.6" cy="59.6" r="6.6"></circle>
+    <circle cx="43.2" cy="69.2" r="8.2"></circle>
+    <circle cx="69.2" cy="64.6" r="9.4"></circle>
+    <circle cx="89.7" cy="47.6" r="8.2"></circle>
+    <circle cx="102.4" cy="27.3" r="6.6"></circle>
+    <circle cx="110" cy="8" r="5"></circle>
+  </svg>
+  <span class="logo-text">
+    <span class="logo-top">Torrey Hills</span>
+    <span class="logo-name">Orthodontics</span>
+  </span>
+</a>

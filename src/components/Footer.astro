@@ -1,0 +1,101 @@
+---
+import Logo from "./Logo.astro";
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const page = (path: string) => `${base}/${path}`;
+const onPage = (hash: string) => `${base}/${hash}`;
+
+// PLACEHOLDER navigation. Anything using page() is a subpage that does not
+// exist yet and will 404 until it is built; the onPage() links already work
+// because those sections are on the landing page.
+const groups = [
+  {
+    title: "Treatments",
+    links: [
+      { label: "Clear aligners", href: page("clear-aligners") },
+      { label: "Braces", href: page("braces") },
+      { label: "Early treatment", href: page("early-treatment") },
+      { label: "Retainers", href: page("retainers") },
+      { label: "Emergency care", href: page("emergencies") },
+    ],
+  },
+  {
+    title: "Patients",
+    links: [
+      { label: "New patients", href: page("new-patients") },
+      { label: "Your first visit", href: page("first-visit") },
+      { label: "Insurance and financing", href: page("insurance") },
+      { label: "Patient forms", href: page("forms") },
+      { label: "Questions", href: onPage("#faq") },
+    ],
+  },
+  {
+    title: "Practice",
+    links: [
+      { label: "About Dr. Lee", href: page("about") },
+      { label: "Meet the team", href: page("team") },
+      { label: "Office tour", href: onPage("#tour") },
+      { label: "Smile gallery", href: page("gallery") },
+      { label: "Reviews", href: onPage("#testimonials") },
+    ],
+  },
+];
+
+const legal = [
+  { label: "Privacy", href: page("privacy") },
+  { label: "Accessibility", href: page("accessibility") },
+  { label: "Notice of privacy practices", href: page("hipaa") },
+];
+
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <Logo href={base || "/"} />
+      <p class="footer-blurb">
+        Independent orthodontics in Carmel Valley. One specialist, start to
+        finish.
+      </p>
+      <address class="footer-address">
+        4765 Carmel Mountain Road, Suite 200<br />
+        San Diego, CA 92130<br />
+        <a href="tel:+18584811771">(858) 481-1771</a><br />
+        <a href="mailto:info@torreyhillsortho.com">info@torreyhillsortho.com</a>
+      </address>
+    </div>
+
+    <nav class="footer-nav" aria-label="Footer">
+      {
+        groups.map(({ title, links }) => (
+          <div class="footer-group">
+            <h2 class="footer-group-title">{title}</h2>
+            <ul>
+              {links.map(({ label, href }) => (
+                <li>
+                  <a href={href}>{label}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </nav>
+  </div>
+
+  <div class="footer-base">
+    <p class="footer-copyright">
+      © {year} Torrey Hills Orthodontics. All rights reserved.
+    </p>
+    <ul class="footer-legal">
+      {
+        legal.map(({ label, href }) => (
+          <li>
+            <a href={href}>{label}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</footer>

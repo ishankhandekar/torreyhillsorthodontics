@@ -1,0 +1,137 @@
+---
+// PLACEHOLDER CONTENT — not real reviews. Replace `quote`, `name` and
+// `initials` with verbatim Google reviews before this goes to the client.
+// Keep the wording exact and the name as the reviewer published it.
+// The bar count follows this array, so adding or removing entries just works.
+const testimonials = [
+  {
+    quote:
+      "Review 1 of 5. Paste a real Google review here. This placeholder runs about the length of a typical two-sentence review, so you can see how the quote wraps at this size before the real copy lands.",
+    name: "Reviewer One",
+    initials: "RO",
+    stars: 5,
+  },
+  {
+    quote:
+      "Review 2 of 5. A shorter placeholder, to show how the section holds its height when one review is briefer than the rest.",
+    name: "Reviewer Two",
+    initials: "RT",
+    stars: 5,
+  },
+  {
+    quote:
+      "Review 3 of 5. A longer placeholder, running to roughly four or five lines on a wide screen, so you can check that the tallest review in the set does not push the bars around when it comes into view.",
+    name: "Reviewer Three",
+    initials: "RT",
+    stars: 5,
+  },
+  {
+    quote:
+      "Review 4 of 5. Paste a real Google review here, keeping the wording exactly as the patient published it.",
+    name: "Reviewer Four",
+    initials: "RF",
+    stars: 5,
+  },
+  {
+    quote:
+      "Review 5 of 5. The final placeholder in the rotation, after which the carousel returns to the first review.",
+    name: "Reviewer Five",
+    initials: "RF",
+    stars: 5,
+  },
+];
+
+// 5-point star, outer radius 8.4 / inner 3.4, centred in a 20x20 box
+const STAR =
+  "M10 1.6 12 7.25 17.99 7.4 13.23 11.05 14.94 16.8 10 13.4 5.06 16.8 6.77 11.05 2.01 7.4 8 7.25Z";
+---
+
+<section class="testimonials" id="testimonials">
+  <div class="testimonials-inner">
+    <p class="section-eyebrow">What our clients say about us</p>
+
+    {/* Slides share one grid cell, so the section is as tall as the longest
+        review and nothing shifts as they rotate */}
+    <div class="testimonial-track">
+      {
+        testimonials.map(({ quote, name, initials, stars }, i) => (
+          <figure class:list={["testimonial", { "is-active": i === 0 }]}>
+            <blockquote class="testimonial-quote">{`“${quote}”`}</blockquote>
+            <figcaption class="testimonial-author">
+              <span class="testimonial-avatar" aria-hidden="true">
+                {initials}
+              </span>
+              <span class="testimonial-meta">
+                <span class="testimonial-name">{name}</span>
+                <span
+                  class="testimonial-stars"
+                  role="img"
+                  aria-label={`${stars} out of 5 stars`}
+                >
+                  {Array.from({ length: stars }, () => (
+                    <svg
+                      class="testimonial-star"
+                      viewBox="0 0 20 20"
+                      aria-hidden="true"
+                    >
+                      <path d={STAR} />
+                    </svg>
+                  ))}
+                </span>
+                <span class="testimonial-source">Verified Google Review</span>
+              </span>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+
+    <div class="testimonial-bars" role="group" aria-label="Choose a review">
+      {
+        testimonials.map((_, i) => (
+          <button
+            class:list={["testimonial-bar", { "is-active": i === 0 }]}
+            type="button"
+            aria-label={`Show review ${i + 1} of ${testimonials.length}`}
+            aria-current={i === 0 ? "true" : undefined}
+          >
+            <span class="testimonial-bar-fill" />
+          </button>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  const section = document.querySelector<HTMLElement>(".testimonials");
+
+  if (section) {
+    const slides = [...section.querySelectorAll<HTMLElement>(".testimonial")];
+    const bars = [...section.querySelectorAll<HTMLButtonElement>(".testimonial-bar")];
+    let index = 0;
+
+    const show = (next: number) => {
+      index = (next + slides.length) % slides.length;
+      slides.forEach((slide, i) =>
+        slide.classList.toggle("is-active", i === index),
+      );
+      bars.forEach((bar, i) => {
+        // Re-applying the class restarts the fill animation from zero
+        bar.classList.toggle("is-active", i === index);
+        // Everything before the current one stays lit
+        bar.classList.toggle("is-filled", i < index);
+        if (i === index) bar.setAttribute("aria-current", "true");
+        else bar.removeAttribute("aria-current");
+      });
+    };
+
+    bars.forEach((bar, i) => bar.addEventListener("click", () => show(i)));
+
+    // Advancing on the bar's own animation rather than a timer means the fill
+    // and the slide share one clock, so they cannot drift apart.
+    section.addEventListener("animationend", (event) => {
+      if (event.animationName === "testimonial-bar-fill") show(index + 1);
+    });
+  }
+</script>

@@ -1,0 +1,113 @@
+---
+// Address, phone, email and hours are taken from torreyhillsorthodontics.com.
+// The site also lists a Rancho Bernardo office (16787 Bernardo Center Dr) —
+// deliberately left out, as the practice really runs the one location.
+const office = {
+  name: "Torrey Hills Orthodontics",
+  area: "Torrey Hills",
+  city: "San Diego, CA",
+  street: "4765 Carmel Mountain Road, Suite 200",
+  region: "San Diego, CA 92130",
+  phone: "(858) 481-1771",
+  email: "info@torreyhillsortho.com",
+  // Two of these rotate, so the summary below only claims the fixed days
+  hours: [
+    { days: "Monday, Tuesday", time: "9:00 AM – 5:00 PM", note: "Rotational" },
+    { days: "Wednesday, Thursday", time: "9:00 AM – 5:00 PM" },
+    { days: "Friday", time: "12:00 PM – 5:00 PM", note: "Rotational" },
+    { days: "Saturday, Sunday", time: "Closed" },
+  ],
+};
+
+const fullAddress = `${office.street}, ${office.region}`;
+// The pin geocodes the street address without the suite, which resolves far
+// more reliably than a business-name search; directions keep the name.
+const mapPin = encodeURIComponent("4765 Carmel Mountain Rd, San Diego, CA 92130");
+const mapSrc = `https://maps.google.com/maps?q=${mapPin}&z=16&output=embed`;
+const directions = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
+  `${office.name}, ${fullAddress}`,
+)}`;
+---
+
+<section class="locations" id="locations">
+  <div class="locations-inner">
+    <header class="locations-head">
+      <h2 class="section-heading">Our Location</h2>
+      <p class="locations-tagline">
+        Proud to serve the Carmel Valley community
+      </p>
+    </header>
+
+    {/* One office, so this reads as a label rather than a working tab set */}
+    <p class="location-pill">{office.area}</p>
+
+    <article class="location-card">
+      <div class="location-map">
+        <iframe
+          src={mapSrc}
+          title={`Map showing ${office.name} at ${fullAddress}`}
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+
+      <div class="location-body">
+        <header class="location-head">
+          <div>
+            <p class="location-name">{office.name}</p>
+            <p class="location-city">{office.city}</p>
+          </div>
+          <a
+            class="location-directions"
+            href={directions}
+            target="_blank"
+            rel="noopener noreferrer">Get directions</a
+          >
+        </header>
+
+        <div class="location-details">
+          <div class="location-detail">
+            <p class="location-label">Address</p>
+            <p class="location-value">
+              {office.street}<br />{office.region}
+            </p>
+          </div>
+          <div class="location-detail">
+            <p class="location-label">Contact</p>
+            <p class="location-value">
+              <a href={`tel:${office.phone.replace(/[^\d+]/g, "")}`}>
+                {office.phone}
+              </a><br />
+              <a href={`mailto:${office.email}`}>{office.email}</a>
+            </p>
+          </div>
+        </div>
+
+        <footer class="location-footer">
+          <p class="location-today">Wednesday, Thursday: 9:00 AM – 5:00 PM</p>
+
+          {/* A details element so the hours open without any script */}
+          <details class="location-hours">
+            <summary>See hours</summary>
+            <ul>
+              {
+                office.hours.map(({ days, time, note }) => (
+                  <li>
+                    <span class="location-hours-days">{days}</span>
+                    <span class="location-hours-time">
+                      {time}
+                      {note && <em>{note}</em>}
+                    </span>
+                  </li>
+                ))
+              }
+            </ul>
+          </details>
+
+          <p class="location-disclaimer">
+            Appointments must be booked ahead of time.
+          </p>
+        </footer>
+      </div>
+    </article>
+  </div>
+</section>

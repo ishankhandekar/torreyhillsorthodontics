@@ -1,4 +1,9 @@
 ---
+import Logo from "./Logo.astro";
+import Ticker from "./Ticker.astro";
+
+const home = import.meta.env.BASE_URL;
+
 const navLinks = [
   { href: "#about", label: "About" },
   { href: "#services", label: "Services" },
@@ -9,34 +14,22 @@ const navLinks = [
 ---
 
 <header class="navbar">
-  <a href="#" class="logo" aria-label="Torrey Hills Orthodontics home">
-    <svg class="logo-mark" viewBox="2 2 114 78" aria-hidden="true">
-      <path class="logo-wire" d="M8 44C34 86 88 78 110 8"></path>
-      <circle cx="8" cy="44" r="5"></circle>
-      <circle cx="21.6" cy="59.6" r="6.6"></circle>
-      <circle cx="43.2" cy="69.2" r="8.2"></circle>
-      <circle cx="69.2" cy="64.6" r="9.4"></circle>
-      <circle cx="89.7" cy="47.6" r="8.2"></circle>
-      <circle cx="102.4" cy="27.3" r="6.6"></circle>
-      <circle cx="110" cy="8" r="5"></circle>
-    </svg>
-    <span class="logo-text">
-      <span class="logo-top">Torrey Hills</span>
-      <span class="logo-name">Orthodontics</span>
-    </span>
-  </a>
+  <Logo href={home} />
 
   <nav class="nav-links" id="nav-links">
     {navLinks.map(({ href, label }) => <a href={href}>{label}</a>)}
   </nav>
 
   <div class="nav-actions">
-    <a href="tel:+10000000000" class="nav-icon" aria-label="Call us">
+    {/* Local practices lead with the phone; the number is the signal, so it
+        is text rather than an icon until the navbar runs out of room */}
+    <a href="tel:+18584811771" class="nav-phone">
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path
           d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"
         ></path>
       </svg>
+      <span class="nav-phone-number">(858) 481-1771</span>
     </a>
     <a href="#" class="nav-icon" aria-label="Facebook">
       <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -65,10 +58,13 @@ const navLinks = [
       <a href="#contact" class="hero-button">
         Schedule Your Free Consultation
         <svg class="hero-button-arrow" viewBox="0 0 16 16" aria-hidden="true">
-          <path d="M8 2.5v11M3.5 9 8 13.5 12.5 9"></path>
+          <path d="M4 12 12 4M6 4h6v6"></path>
         </svg>
       </a>
     </div>
+
+    {/* Sits at the foot of the photo rather than in its own band below it */}
+    <Ticker />
   </section>
 </div>
 
