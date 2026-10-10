@@ -1,113 +1,177 @@
 ---
+import Logo from "./Logo.astro";
+
 // Address, phone, email and hours are taken from torreyhillsorthodontics.com.
 // The site also lists a Rancho Bernardo office (16787 Bernardo Center Dr) —
 // deliberately left out, as the practice really runs the one location.
 const office = {
   name: "Torrey Hills Orthodontics",
-  area: "Torrey Hills",
   city: "San Diego, CA",
   street: "4765 Carmel Mountain Road, Suite 200",
   region: "San Diego, CA 92130",
   phone: "(858) 481-1771",
   email: "info@torreyhillsortho.com",
-  // Two of these rotate, so the summary below only claims the fixed days
+  // Two of these rotate, so the note is carried through rather than
+  // flattened into a tidier-looking summary that would be wrong
   hours: [
-    { days: "Monday, Tuesday", time: "9:00 AM – 5:00 PM", note: "Rotational" },
-    { days: "Wednesday, Thursday", time: "9:00 AM – 5:00 PM" },
-    { days: "Friday", time: "12:00 PM – 5:00 PM", note: "Rotational" },
-    { days: "Saturday, Sunday", time: "Closed" },
+    { days: "Mon, Tue", time: "9–5", note: "Rotational" },
+    { days: "Wed, Thu", time: "9–5" },
+    { days: "Fri", time: "12–5", note: "Rotational" },
+    { days: "Sat, Sun", time: "Closed" },
   ],
 };
 
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const home = `${base}/`;
+
 const fullAddress = `${office.street}, ${office.region}`;
-// The pin geocodes the street address without the suite, which resolves far
-// more reliably than a business-name search; directions keep the name.
-const mapPin = encodeURIComponent("4765 Carmel Mountain Rd, San Diego, CA 92130");
-const mapSrc = `https://maps.google.com/maps?q=${mapPin}&z=16&output=embed`;
+// A link rather than an embed: an iframe map costs a third-party request and
+// a cookie on every page load to show something nobody visits this site for.
+// The link does the same job at zero weight, only for people who want it.
 const directions = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
   `${office.name}, ${fullAddress}`,
 )}`;
+
+// PLACEHOLDER: all four need the practice's real profile URLs
+const socials = [
+  {
+    label: "Facebook",
+    d: "M14 8V6.1c0-.85.2-1.3 1.5-1.3H17V1.5A22 22 0 0 0 14.8 1.4C11.9 1.4 10.3 3 10.3 6v2H7.5v3.5h2.8V22H14V11.5h2.8l.4-3.5z",
+  },
+  {
+    // Drawn as outlines rather than overlapping shapes: a path that relies on
+    // subpath winding to punch the lens fills solid under the default
+    // nonzero fill rule.
+    label: "Instagram",
+    d: "M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z",
+  },
+  {
+    label: "Google",
+    d: "M21.6 12.23c0-.73-.07-1.43-.19-2.1H12v3.97h5.38a4.6 4.6 0 0 1-2 3.02v2.5h3.23c1.89-1.74 2.98-4.3 2.98-7.39zM12 22c2.7 0 4.96-.9 6.61-2.42l-3.23-2.5c-.9.6-2.04.95-3.38.95-2.6 0-4.8-1.75-5.59-4.11H3.07v2.58A10 10 0 0 0 12 22zM6.41 13.92a6 6 0 0 1 0-3.83V7.5H3.07a10 10 0 0 0 0 9zM12 5.98c1.47 0 2.79.5 3.83 1.5l2.86-2.86C16.96 2.99 14.7 2 12 2a10 10 0 0 0-8.93 5.5l3.34 2.59C7.2 7.73 9.4 5.98 12 5.98z",
+  },
+  {
+    label: "Yelp",
+    d: "M11.1 2.3v9.1c0 .8-1 1.2-1.5.6L5.9 7.6a1 1 0 0 1 .2-1.5 11 11 0 0 1 3.7-1.6c.7-.2 1.3.3 1.3 1zM10 13.8c.5.2.6.9.2 1.3l-2.9 3.1a1 1 0 0 1-1.5-.1 10 10 0 0 1-1.5-3.3c-.1-.6.3-1.2 1-1.2l4.7.2zm3.6 1.1c-.1-.6.5-1.1 1.1-.9l4.3 1.4c.6.2.8.9.5 1.4a10 10 0 0 1-2.4 2.6c-.5.4-1.2.2-1.5-.4l-2-4.1zm.3-3.5c-.5-.3-.5-1-.1-1.4l3.2-2.9c.4-.4 1.1-.3 1.4.2a10 10 0 0 1 1.3 3.1c.1.6-.3 1.2-1 1.2l-4.8-.2zm-1.2 5.3c.5-.3 1.2 0 1.3.6l.6 4.3c.1.6-.4 1.2-1 1.1a10 10 0 0 1-3.2-.9c-.6-.3-.7-1-.3-1.4l2.6-3.7z",
+  },
+];
 ---
 
 <section class="locations" id="locations">
   <div class="locations-inner">
-    <header class="locations-head">
-      <h2 class="section-heading">Our Location</h2>
-      <p class="locations-tagline">
-        Proud to serve the Carmel Valley community
-      </p>
-    </header>
+    <div class="contact-grid">
+      <div class="contact-brand">
+        <Logo href={home} stacked />
+        <p class="contact-tagline">
+          Proud to serve the Carmel Valley community
+        </p>
+        <a
+          class="contact-directions"
+          href={directions}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Get directions
+          <svg viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M4 12 12 4M6 4h6v6"></path>
+          </svg>
+        </a>
 
-    {/* One office, so this reads as a label rather than a working tab set */}
-    <p class="location-pill">{office.area}</p>
-
-    <article class="location-card">
-      <div class="location-map">
-        <iframe
-          src={mapSrc}
-          title={`Map showing ${office.name} at ${fullAddress}`}
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <p class="location-disclaimer">
+          Appointments must be booked ahead of time.
+        </p>
       </div>
 
-      <div class="location-body">
-        <header class="location-head">
-          <div>
-            <p class="location-name">{office.name}</p>
-            <p class="location-city">{office.city}</p>
-          </div>
-          <a
-            class="location-directions"
-            href={directions}
-            target="_blank"
-            rel="noopener noreferrer">Get directions</a
-          >
-        </header>
+      {/* The ring is centred on this wrapper, which shrinks to its content —
+          centring it on the column instead would put the circle to the right
+          of the text, because the socials row is a full-width block. */}
+      <div class="contact-details">
+        <div class="contact-details-inner">
+          {/* Decorative: the practice name is already on the page as real
+              text, so this is not read out a second time */}
+          <svg class="contact-ring" viewBox="0 0 400 400" aria-hidden="true">
+            <defs>
+              <path
+                id="contact-ring-path"
+                fill="none"
+                d="M 200,200 m -165,0 a 165,165 0 1,1 330,0 a 165,165 0 1,1 -330,0"
+              ></path>
+            </defs>
+            <text>
+              <textPath href="#contact-ring-path" startOffset="0">
+                Torrey Hills Orthodontics · One specialist, start to finish ·
+              </textPath>
+            </text>
+          </svg>
 
-        <div class="location-details">
-          <div class="location-detail">
-            <p class="location-label">Address</p>
-            <p class="location-value">
+          <div class="contact-item">
+            <p class="contact-label">Phone number</p>
+            <p class="contact-value">
+              <a href={`tel:${office.phone.replace(/[^\d+]/g, "")}`}>
+                {office.phone}
+              </a>
+            </p>
+          </div>
+
+          <div class="contact-item">
+            <p class="contact-label">Address</p>
+            <p class="contact-value contact-address">
               {office.street}<br />{office.region}
             </p>
           </div>
-          <div class="location-detail">
-            <p class="location-label">Contact</p>
-            <p class="location-value">
-              <a href={`tel:${office.phone.replace(/[^\d+]/g, "")}`}>
-                {office.phone}
-              </a><br />
-              <a href={`mailto:${office.email}`}>{office.email}</a>
-            </p>
-          </div>
-        </div>
 
-        <footer class="location-footer">
-          <p class="location-today">Wednesday, Thursday: 9:00 AM – 5:00 PM</p>
-
-          {/* A details element so the hours open without any script */}
-          <details class="location-hours">
-            <summary>See hours</summary>
-            <ul>
+          <div class="contact-item">
+            <p class="contact-label">Office hours</p>
+            <p class="contact-hours">
               {
                 office.hours.map(({ days, time, note }) => (
-                  <li>
-                    <span class="location-hours-days">{days}</span>
-                    <span class="location-hours-time">
-                      {time}
-                      {note && <em>{note}</em>}
-                    </span>
-                  </li>
+                  <>
+                    <b>{days}</b> {time}
+                    {note && <em>{note}</em>}
+                    <br />
+                  </>
                 ))
               }
-            </ul>
-          </details>
+            </p>
+          </div>
 
-          <p class="location-disclaimer">
-            Appointments must be booked ahead of time.
-          </p>
-        </footer>
+          <div class="contact-socials">
+            {
+              socials.map(({ label, d }) => (
+                <a class="contact-social" href="#" aria-label={label}>
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d={d} />
+                  </svg>
+                </a>
+              ))
+            }
+          </div>
+        </div>
       </div>
-    </article>
+    </div>
+
   </div>
 </section>
+
+<script>
+  // Fit the ring's text to its own circumference. Tuning the font size by
+  // hand means re-tuning it every time the wording or the layout changes,
+  // so it is measured: scale by (path length / text length) and the phrase
+  // meets its own tail exactly once around.
+  const fitRing = (ring: SVGSVGElement) => {
+    const text = ring.querySelector("text");
+    const path = ring.querySelector("path");
+    if (!text || !path) return;
+    const len = text.getComputedTextLength();
+    if (!len) return;
+    const size = parseFloat(getComputedStyle(text).fontSize);
+    text.style.fontSize = `${size * (path.getTotalLength() / len)}px`;
+  };
+
+  const rings = document.querySelectorAll<SVGSVGElement>(".contact-ring");
+  const fitAll = () => rings.forEach(fitRing);
+
+  // Webfonts change the measurement, so wait for them rather than fitting
+  // against the fallback face and being wrong by a few percent
+  document.fonts.ready.then(fitAll);
+  addEventListener("resize", fitAll);
+</script>

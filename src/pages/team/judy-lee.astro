@@ -1,0 +1,222 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Navbar from "../../components/Navbar.astro";
+import Consult from "../../components/Consult.astro";
+import Footer from "../../components/Footer.astro";
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const home = `${base}/`;
+
+// EVERYTHING ON THIS PAGE IS INVENTED. Degrees, dates, schools, board
+// certification, memberships and the personal details are all plausible
+// placeholders written to give the layout real-shaped content — none of it
+// came from Dr. Lee. Claiming board certification or a specific degree that
+// someone does not hold is not a typo, so this page must be rewritten from
+// her own CV before it is published anywhere real.
+const stats = [
+  { label: "In practice", value: "Since 2011" },
+  { label: "Scope", value: "Orthodontics only" },
+  { label: "Board", value: "ABO certified" },
+  { label: "Practice", value: "Independent, solo" },
+];
+
+const cv = [
+  {
+    year: "2003",
+    title: "BS, Biological Sciences",
+    copy: "University of California. Four years of thinking she would end up in research, and two summers in a dental clinic that settled it.",
+  },
+  {
+    year: "2007",
+    title: "Doctor of Dental Surgery",
+    copy: "General dental training — the whole mouth, not just the bite. It is the reason she is comfortable telling a patient when the problem is not actually orthodontic.",
+  },
+  {
+    year: "2010",
+    title: "MS and Certificate in Orthodontics",
+    copy: "A three-year residency specialising in tooth movement and jaw growth. Orthodontists are dentists who did this afterwards; most dentists have not.",
+  },
+  {
+    year: "2011",
+    title: "Opened Torrey Hills Orthodontics",
+    copy: "One room on Carmel Mountain Road, one chair, and a decision not to join a group practice. That decision is still the reason the place works the way it does.",
+  },
+  {
+    year: "2014",
+    title: "Board certified",
+    copy: "Diplomate of the American Board of Orthodontics — a voluntary examination of real finished cases. Fewer than a third of practising orthodontists hold it.",
+  },
+  {
+    year: "Today",
+    title: "Still the only orthodontist here",
+    copy: "Every plan, every adjustment, every debond. Fourteen years in, a good share of the appointment book is younger siblings of patients she finished a decade ago.",
+  },
+];
+
+const memberships = [
+  "Diplomate, American Board of Orthodontics",
+  "American Association of Orthodontists",
+  "Pacific Coast Society of Orthodontists",
+  "California Dental Association",
+  "San Diego County Dental Society",
+];
+
+const outside = [
+  {
+    title: "Los Peñasquitos Canyon",
+    copy: "Out on the trail most mornings before the office opens. If you see someone running the canyon at six, there is a reasonable chance it is your orthodontist.",
+  },
+  {
+    title: "Science Olympiad",
+    copy: "Helps coach a middle-school team each spring, mostly the anatomy and physiology events. She claims this is not a recruitment strategy.",
+  },
+  {
+    title: "A stubborn vegetable garden",
+    copy: "Tomatoes that do well, peppers that do not, and an ongoing dispute with the neighbourhood rabbits that she is currently losing.",
+  },
+  {
+    title: "Youth soccer",
+    copy: "The practice sponsors a local club side. Several of the players are also patients, which makes the sideline conversations about mouthguards unavoidable.",
+  },
+];
+---
+
+<Layout
+  title="Dr. Judy Lee · Torrey Hills Orthodontics"
+  description="Meet Dr. Judy Lee, the orthodontist behind Torrey Hills Orthodontics in Carmel Valley, San Diego. Her training, her approach, and why the practice has stayed small."
+>
+  <Navbar />
+
+  <main>
+    <header class="bio-hero">
+      <div class="bio-hero-inner">
+        <div class="bio-copy">
+          <nav class="crumbs" aria-label="Breadcrumb">
+            <a href={home}>Home</a>
+            <span aria-hidden="true">/</span>
+            <a href={`${home}team`}>Team</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Dr. Judy Lee</span>
+          </nav>
+
+          <p class="section-eyebrow tpage-eyebrow">Orthodontist</p>
+          <h1 class="bio-name">Dr. Judy Lee</h1>
+          <p class="bio-role">
+            DDS, MS · Diplomate of the American Board of Orthodontics
+          </p>
+          <p class="bio-lede">
+            She has been on Carmel Mountain Road since 2011, and she is the
+            only orthodontist here. Whoever plans your treatment is who adjusts
+            it, every visit, for as long as it takes — which is the whole
+            argument for a practice this size.
+          </p>
+
+          <div class="bio-actions">
+            <a class="bio-button" href={`${home}consultation`}>
+              Book with Dr. Lee
+            </a>
+            <a class="bio-phone" href="tel:+18584811771">(858) 481-1771</a>
+          </div>
+        </div>
+
+        {/* PLACEHOLDER portrait: the shared hero photo stands in until a real
+            photograph of Dr. Lee exists. Decorative here — the name beside it
+            is the content — so it is a background rather than an <img>. */}
+        <div class="bio-portrait">
+          <div class="bio-photo" role="presentation"></div>
+        </div>
+      </div>
+    </header>
+
+    <section class="bio-stats">
+      <div class="bio-stats-inner">
+        <dl class="spec-strip">
+          {
+            stats.map(({ label, value }) => (
+              <div class="spec">
+                <dt class="spec-label">{label}</dt>
+                <dd class="spec-value">{value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </section>
+
+    <section class="bio-quote-section">
+      <figure class="bio-quote">
+        <div class="bio-quote-rule" aria-hidden="true"></div>
+        <blockquote>
+          <p>
+            Working out the treatment plan is the easy part. Explaining it so
+            that a fourteen-year-old and their parent both walk out
+            understanding the same thing — that is the actual job.
+          </p>
+        </blockquote>
+        <figcaption class="bio-quote-attr">Dr. Judy Lee</figcaption>
+      </figure>
+    </section>
+
+    <section class="tsection tsection-band">
+      <div class="tsection-inner tsplit">
+        <div class="tsplit-intro">
+          <p class="section-eyebrow">The short version</p>
+          <h2 class="section-heading">How she got here</h2>
+          <p class="section-subline tsplit-subline">
+            Eleven years of training before she straightened anyone's teeth
+            unsupervised, and fourteen years of doing it since.
+          </p>
+        </div>
+        <ol class="cv">
+          {
+            cv.map(({ year, title, copy }) => (
+              <li>
+                <span class="cv-year">{year}</span>
+                <div>
+                  <h3 class="cv-title">{title}</h3>
+                  <p class="cv-copy">{copy}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </section>
+
+    <section class="tsection">
+      <div class="tsection-inner tsplit">
+        <div class="tsplit-intro">
+          <p class="section-eyebrow">Credentials</p>
+          <h2 class="section-heading">Where she is a member</h2>
+          <p class="section-subline tsplit-subline">
+            Board certification is voluntary and has to be renewed. She keeps
+            it current, which is the part that actually matters.
+          </p>
+        </div>
+        <ul class="case-list">
+          {memberships.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+    </section>
+
+    <section class="tsection tsection-band">
+      <div class="tsection-inner">
+        <p class="section-eyebrow">Away from the chair</p>
+        <h2 class="section-heading">Outside the office</h2>
+        <div class="care-grid">
+          {
+            outside.map(({ title, copy }) => (
+              <div class="care">
+                <h3 class="care-title">{title}</h3>
+                <p class="care-copy">{copy}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Consult />
+  <Footer />
+</Layout>

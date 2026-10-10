@@ -1,0 +1,306 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar.astro";
+import Consult from "../components/Consult.astro";
+import Footer from "../components/Footer.astro";
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const home = `${base}/`;
+
+// ALL CLINICAL CONTENT HERE IS UNVERIFIED and needs Dr. Lee's review before
+// launch. The age-seven screening point is the American Association of
+// Orthodontists' standing recommendation, but which appliances this practice
+// actually uses is a guess and must be confirmed. The cost band is a typical
+// US figure, not her fee, and must be replaced or pulled.
+//
+// This page is written to a parent, not to the patient. That is deliberate
+// and is why the voice differs from the braces and aligners pages.
+const specs = [
+  { label: "First check", value: "Around age 7" },
+  { label: "Typical length", value: "9–18 months" },
+  { label: "Visits", value: "Every 6–8 weeks" },
+  { label: "Typical cost", value: "$2,000–$4,000" },
+];
+
+const signs = [
+  "Teeth that meet edge to edge, or a bite where the top teeth sit inside the bottom",
+  "Crowding obvious enough that adult teeth are coming in behind or in front of the arch",
+  "Baby teeth lost much earlier or much later than their siblings or classmates",
+  "A jaw that shifts to one side when your child closes their teeth together",
+  "Thumb sucking or a dummy habit still going after the adult front teeth appear",
+  "Difficulty biting, chewing, or persistent mouth breathing",
+];
+
+const appliances = [
+  {
+    title: "Palatal expander",
+    copy: "Widens the upper jaw a fraction at a time while the growth plate in the palate is still open.",
+    points: ["Fixed in, not removable", "Usually a few months", "Fixes most crossbites"],
+  },
+  {
+    title: "Space maintainer",
+    copy: "Holds the gap left by a baby tooth lost early so the neighbouring teeth cannot drift into it.",
+    points: ["Small and fixed", "Stays until the adult tooth comes", "Avoids crowding later"],
+  },
+  {
+    title: "Habit appliance",
+    copy: "A simple fixed guard that makes thumb sucking or tongue thrusting unrewarding rather than forbidden.",
+    points: ["No telling off required", "Usually a few months", "Protects the front teeth"],
+  },
+  {
+    title: "Partial braces",
+    copy: "Brackets on the front teeth only, to bring an adult tooth into line or close a gap that is causing a problem now.",
+    points: ["Front teeth only", "Shorter than full braces", "Often phase one of two"],
+  },
+];
+
+const phases = [
+  {
+    title: "Phase one",
+    copy: "Nine to eighteen months of appliance work between roughly seven and eleven, aimed at the jaw and the space — the things that are only correctable while your child is still growing.",
+  },
+  {
+    title: "Resting period",
+    copy: "A year or more of simply watching, with a free check every six to twelve months while the remaining adult teeth arrive. Most of this stage is appointments where we do nothing.",
+  },
+  {
+    title: "Phase two",
+    copy: "Braces or aligners in the early teens to finish the alignment, once all the adult teeth are in. Usually shorter and simpler than it would have been without phase one.",
+  },
+];
+
+const costs = [
+  {
+    title: "The first visit is free",
+    copy: "An age-seven check costs you nothing, and for most children the answer is that nothing needs doing yet.",
+  },
+  {
+    title: "Watching is free too",
+    copy: "If Dr. Lee wants to keep an eye on something, those monitoring visits are not charged. We would rather see your child twice a year than guess.",
+  },
+  {
+    title: "Phase one is quoted separately",
+    copy: "You get the fee for phase one in writing before it starts, and an honest estimate of whether phase two is likely and what it would add.",
+  },
+  {
+    title: "Insurance and FSA",
+    copy: "Most PPO plans treat phase one as orthodontic benefit, which is usually a lifetime maximum — worth knowing, because using it now means less of it is available later.",
+  },
+];
+
+const faqs = [
+  {
+    q: "Why age seven? She still has baby teeth.",
+    a: "That is the point. At seven the first adult molars and incisors are usually in, which is enough to see how the bite is developing, while the jaw is still growing and can be guided. Waiting until all the baby teeth are gone means the window for the jaw work has closed.",
+  },
+  {
+    q: "Does early treatment mean she avoids braces later?",
+    a: "Usually not, and anyone who promises that is overselling it. Phase one fixes the jaw and space problems that only respond while your child is growing. Most children still need braces or aligners in their teens, but a shorter and simpler course.",
+  },
+  {
+    q: "What happens if we just wait?",
+    a: "For most children, nothing — and that is what Dr. Lee will tell you. For the minority with a crossbite, a severe crowding problem or a jaw discrepancy, waiting can turn something correctable with an appliance into something needing extractions or, occasionally, surgery.",
+  },
+  {
+    q: "Will an expander hurt?",
+    a: "There is pressure and a feeling of tightness for a few minutes after each turn, and some children notice a gap opening between the front teeth, which is normal and closes on its own. It is not painful.",
+  },
+  {
+    q: "How will she eat and talk with an appliance in?",
+    a: "Speech is a bit odd for the first week and then stops being. Eating takes a few days of adjustment and some care about hard and sticky food. Children adapt to this far faster than their parents expect.",
+  },
+  {
+    q: "Do I need a referral from our dentist?",
+    a: "No. Plenty of our age-seven checks are parents who booked directly because they noticed something. If your dentist has taken recent x-rays, bring them and we will not repeat them.",
+  },
+];
+---
+
+<Layout
+  title="Early Treatment · Torrey Hills Orthodontics"
+  description="Early orthodontic treatment and jaw orthopedics for children in Carmel Valley, San Diego. Why age seven, what we look for, and what phase one treatment with Dr. Judy Lee involves."
+>
+  <Navbar />
+
+  <main>
+    {/* Dark band so the navbar's white links have something to sit on before
+        the scrolled glass bar fades in — see .tpage-head in Layout.astro */}
+    <header class="tpage-head">
+      <div class="tpage-head-inner">
+        <nav class="crumbs" aria-label="Breadcrumb">
+          <a href={home}>Home</a>
+          <span aria-hidden="true">/</span>
+          <a href={`${home}#services`}>Treatments</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">Early Treatment</span>
+        </nav>
+
+        <p class="section-eyebrow tpage-eyebrow">Treatment</p>
+        <h1 class="tpage-title">Early Treatment</h1>
+        <p class="tpage-lede">
+          Guiding a jaw while it is still growing, rather than straightening
+          teeth once it has stopped. For most children the answer at this age
+          is that nothing needs doing — but the small number who do need
+          something need it now, not at fourteen.
+        </p>
+
+        <dl class="spec-strip">
+          {
+            specs.map(({ label, value }) => (
+              <div class="spec">
+                <dt class="spec-label">{label}</dt>
+                <dd class="spec-value">{value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </header>
+
+    <section class="tsection">
+      <div class="tsection-inner tsplit">
+        <div class="tsplit-intro">
+          <p class="section-eyebrow">Why so early</p>
+          <h2 class="section-heading">Age seven, and usually no treatment</h2>
+          <p class="section-subline tsplit-subline">
+            The American Association of Orthodontists puts the first check at
+            seven. It is a screening, not a sales appointment.
+          </p>
+        </div>
+        <p class="section-statement">
+          By seven the first adult molars and front teeth are usually through,
+          which is enough for Dr. Lee to see how the bite is developing — while
+          the jaw is still growing and can still be influenced. Most children
+          who come in at this age leave with nothing but a note to come back in
+          a year. That is the expected outcome, and those follow-ups are free.
+          The reason to come anyway is the minority: a crossbite, a jaw that
+          shifts, or crowding severe enough that waiting until twelve turns an
+          appliance into extractions.
+        </p>
+      </div>
+    </section>
+
+    <section class="tsection tsection-band">
+      <div class="tsection-inner tsplit">
+        <div class="tsplit-intro">
+          <p class="section-eyebrow">What to look for</p>
+          <h2 class="section-heading">Reasons to book sooner</h2>
+          <p class="section-subline tsplit-subline">
+            None of these are emergencies. They are the things worth having
+            looked at rather than waiting another year to see.
+          </p>
+        </div>
+        <ul class="case-list">
+          {signs.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+    </section>
+
+    <section class="tsection">
+      <div class="tsection-inner">
+        <p class="section-eyebrow">If something is needed</p>
+        <h2 class="section-heading">What we actually use</h2>
+        <p class="section-subline steps-subline">
+          Early treatment is rarely braces. It is usually one small appliance
+          doing one specific job, for a few months.
+        </p>
+        <div class="type-cards">
+          {
+            appliances.map(({ title, copy, points }) => (
+              <article class="type-card">
+                <h3 class="type-card-title">{title}</h3>
+                <p class="type-card-copy">{copy}</p>
+                <ul class="treatment-points">
+                  {points.map((point) => (
+                    <li>{point}</li>
+                  ))}
+                </ul>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="tsection tsection-band">
+      <div class="tsection-inner">
+        <h2 class="section-heading">How the two phases fit together</h2>
+        <p class="section-subline steps-subline">
+          This is the part most practices leave vague, so here it is plainly:
+          early treatment usually does not replace braces. It makes the braces
+          shorter and the problem smaller.
+        </p>
+        <ol class="steps">
+          {
+            phases.map(({ title, copy }, i) => (
+              <li class="step">
+                <span class="step-num" aria-hidden="true">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <h3 class="step-title">{title}</h3>
+                <p class="step-copy">{copy}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </section>
+
+    <section class="tsection">
+      <div class="tsection-inner">
+        <p class="section-eyebrow">Cost and insurance</p>
+        <h2 class="section-heading">What this costs you</h2>
+        <div class="cost-grid">
+          {
+            costs.map(({ title, copy }) => (
+              <div class="cost">
+                <h3 class="cost-title">{title}</h3>
+                <p class="cost-copy">{copy}</p>
+              </div>
+            ))
+          }
+        </div>
+        {/* PLACEHOLDER figure — must be Dr. Lee's real range or removed */}
+        <p class="cost-note">
+          Phase one treatment here typically runs $2,000 to $4,000 depending on
+          the appliance and how long it stays in. Your exact figure comes
+          before it starts, in writing, along with an honest view of whether
+          phase two is likely.
+        </p>
+      </div>
+    </section>
+
+    <section class="faq">
+      <div class="faq-inner">
+        <div class="faq-intro">
+          <p class="section-eyebrow">Before you book</p>
+          <h2 class="section-heading">Questions parents ask</h2>
+          <p class="section-subline">
+            Anything here you want to go through properly, call the office and
+            ask. We would rather answer it now than at the first visit.
+          </p>
+        </div>
+
+        {/* Own accordion name so it cannot interact with any other set */}
+        <div class="faq-list">
+          {
+            faqs.map(({ q, a }) => (
+              <details class="faq-item" name="early-faq">
+                <summary>
+                  <span class="faq-question">{q}</span>
+                  <svg class="faq-icon" viewBox="0 0 16 16" aria-hidden="true">
+                    <path d="M3 6l5 5 5-5" />
+                  </svg>
+                </summary>
+                <p class="faq-answer">{a}</p>
+              </details>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Consult />
+  <Footer />
+</Layout>

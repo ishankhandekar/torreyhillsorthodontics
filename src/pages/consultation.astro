@@ -1,0 +1,291 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
+
+const home = import.meta.env.BASE_URL;
+---
+
+<Layout
+  title="Schedule Your Consultation · Torrey Hills Orthodontics"
+  description="Book a free consultation with Dr. Judy Lee at Torrey Hills Orthodontics in Carmel Valley, San Diego."
+>
+  <Navbar />
+
+  <main class="booking">
+    <div class="booking-inner">
+      <h1 class="section-heading">Schedule Your Consultation</h1>
+
+      {/* No action yet — this does not submit anywhere until it is wired up.
+          Deliberately no medical questions: once a form collects health
+          information it is PHI, and the whole pipeline needs to handle it
+          accordingly. Scheduling details only. */}
+      <form class="booking-form">
+        <div class="booking-grid">
+          <div class="booking-field">
+            <label class="booking-label" for="first-name">
+              First name <span class="booking-required">*</span>
+            </label>
+            <input
+              class="booking-input"
+              id="first-name"
+              name="first-name"
+              type="text"
+              autocomplete="given-name"
+              required
+            />
+          </div>
+
+          <div class="booking-field">
+            <label class="booking-label" for="last-name">
+              Last name <span class="booking-required">*</span>
+            </label>
+            <input
+              class="booking-input"
+              id="last-name"
+              name="last-name"
+              type="text"
+              autocomplete="family-name"
+              required
+            />
+          </div>
+
+          <div class="booking-field">
+            <label class="booking-label" for="email">
+              Email <span class="booking-required">*</span>
+            </label>
+            <input
+              class="booking-input"
+              id="email"
+              name="email"
+              type="email"
+              autocomplete="email"
+              required
+            />
+          </div>
+
+          <div class="booking-field">
+            <label class="booking-label" for="phone">
+              Phone <span class="booking-required">*</span>
+            </label>
+            <input
+              class="booking-input"
+              id="phone"
+              name="phone"
+              type="tel"
+              autocomplete="tel"
+              required
+            />
+          </div>
+
+          <div class="booking-field">
+            <label class="booking-label" for="patient">
+              Who is this for <span class="booking-required">*</span>
+            </label>
+            <select class="booking-input" id="patient" name="patient" required>
+              <option value="self">Myself</option>
+              <option value="child">My child</option>
+            </select>
+          </div>
+
+          <div class="booking-field">
+            <label class="booking-label" for="age">Patient's age</label>
+            <input
+              class="booking-input"
+              id="age"
+              name="age"
+              type="text"
+              inputmode="numeric"
+            />
+          </div>
+
+          <div class="booking-field">
+            <label class="booking-label" for="insurance">
+              Do you have orthodontic insurance?
+            </label>
+            <select class="booking-input" id="insurance" name="insurance">
+              <option value="">Select…</option>
+              <option value="yes">Yes</option>
+              <option value="no">No</option>
+              <option value="unsure">Not sure</option>
+            </select>
+          </div>
+
+          <div class="booking-field">
+            <label class="booking-label" for="contact-preference">
+              Do you prefer to be contacted by phone or email?
+            </label>
+            <select
+              class="booking-input"
+              id="contact-preference"
+              name="contact-preference"
+            >
+              <option value="">Select…</option>
+              <option value="phone">Phone</option>
+              <option value="email">Email</option>
+            </select>
+          </div>
+
+          <div class="booking-field booking-field-full">
+            <label class="booking-label" for="message">
+              Anything else you would like us to know?
+            </label>
+            <textarea class="booking-input booking-textarea" id="message" name="message" rows="3"
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="booking-foot">
+          <p class="booking-consent">
+            By submitting this form you agree to be contacted by Torrey Hills
+            Orthodontics about your request. Please don't include medical
+            details here — Dr. Lee will go through those with you at the visit.
+          </p>
+          <button class="booking-submit" type="submit">Request a visit</button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  {/* PLACEHOLDER BEHAVIOUR. The form has no action and no backend, so nothing
+      is actually sent — this dialog currently confirms something that did not
+      happen. It must not go live until the form posts somewhere real. */}
+  <dialog class="sent" id="sent" aria-labelledby="sent-title">
+    <h2 class="sent-title" id="sent-title">Your request has been sent</h2>
+    <p class="sent-copy">
+      We'll contact you the way you asked and find a time that works. We look
+      forward to meeting you.
+    </p>
+    <a class="sent-button" href={home}>Go to Home</a>
+  </dialog>
+
+  <Footer dark />
+</Layout>
+<script>
+  // PLACEHOLDER: with no backend, submission is intercepted and the
+  // confirmation shown. Delete this block once the form posts for real.
+  const form = document.querySelector<HTMLFormElement>(".booking-form");
+  const sent = document.querySelector<HTMLDialogElement>("#sent");
+
+  if (form && sent) {
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      // showModal is what makes the rest of the page inert and traps focus
+      sent.showModal();
+    });
+  }
+</script>
+
+<script>
+  // Progressive enhancement: the real <select> stays in the DOM and keeps the
+  // value, so the form submits normally and still works without JS. Each one
+  // is swapped for a button + listbox that we can actually style — the open
+  // list of a native select is drawn by the OS and cannot be.
+  const selects = document.querySelectorAll<HTMLSelectElement>("select.booking-input");
+
+  selects.forEach((select) => {
+    const label = document.querySelector<HTMLLabelElement>(
+      `label[for="${select.id}"]`,
+    );
+    if (label && !label.id) label.id = `${select.id}-label`;
+
+    const combo = document.createElement("div");
+    combo.className = "combo";
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "booking-input combo-button";
+    button.id = `${select.id}-button`;
+    button.setAttribute("aria-haspopup", "listbox");
+    button.setAttribute("aria-expanded", "false");
+    // Label first, then the button's own text, so it reads "Insurance, Yes"
+    if (label) button.setAttribute("aria-labelledby", `${label.id} ${button.id}`);
+
+    const list = document.createElement("ul");
+    list.className = "combo-list";
+    list.setAttribute("role", "listbox");
+    if (label) list.setAttribute("aria-labelledby", label.id);
+    list.hidden = true;
+
+    const options = [...select.options].map((option, i) => {
+      const item = document.createElement("li");
+      item.className = "combo-option";
+      item.id = `${select.id}-option-${i}`;
+      item.setAttribute("role", "option");
+      item.tabIndex = -1;
+      item.textContent = option.text;
+      item.dataset.value = option.value;
+      list.append(item);
+      return item;
+    });
+
+    const sync = () => {
+      button.textContent = select.options[select.selectedIndex]?.text ?? "";
+      options.forEach((item, i) =>
+        item.setAttribute("aria-selected", String(i === select.selectedIndex)),
+      );
+    };
+
+    const close = (refocus = true) => {
+      if (list.hidden) return;
+      list.hidden = true;
+      button.setAttribute("aria-expanded", "false");
+      if (refocus) button.focus();
+    };
+
+    const open = (focusIndex = select.selectedIndex) => {
+      list.hidden = false;
+      button.setAttribute("aria-expanded", "true");
+      options[Math.max(0, focusIndex)]?.focus();
+    };
+
+    const choose = (i: number) => {
+      select.selectedIndex = i;
+      select.dispatchEvent(new Event("change", { bubbles: true }));
+      sync();
+      close();
+    };
+
+    button.addEventListener("click", () => (list.hidden ? open() : close()));
+
+    button.addEventListener("keydown", (event) => {
+      if (["ArrowDown", "ArrowUp", "Enter", " "].includes(event.key)) {
+        event.preventDefault();
+        open();
+      }
+    });
+
+    list.addEventListener("keydown", (event) => {
+      const current = options.indexOf(document.activeElement as HTMLElement);
+      const move = (to: number) => {
+        event.preventDefault();
+        options[(to + options.length) % options.length].focus();
+      };
+      if (event.key === "ArrowDown") move(current + 1);
+      else if (event.key === "ArrowUp") move(current - 1);
+      else if (event.key === "Home") move(0);
+      else if (event.key === "End") move(options.length - 1);
+      else if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        choose(current);
+      } else if (event.key === "Escape") close();
+      // Tab should move on rather than trap focus in the list
+      else if (event.key === "Tab") close(false);
+    });
+
+    options.forEach((item, i) => item.addEventListener("click", () => choose(i)));
+
+    document.addEventListener("pointerdown", (event) => {
+      if (!combo.contains(event.target as Node)) close(false);
+    });
+
+    select.before(combo);
+    combo.append(button, list);
+    // Kept for submission and autofill, out of the tab order and the a11y tree
+    select.hidden = true;
+    select.tabIndex = -1;
+    select.setAttribute("aria-hidden", "true");
+    sync();
+  });
+</script>
+

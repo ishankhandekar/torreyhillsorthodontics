@@ -1,0 +1,266 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar.astro";
+import Consult from "../components/Consult.astro";
+import Footer from "../components/Footer.astro";
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const home = `${base}/`;
+
+// ALL CLINICAL CONTENT HERE IS UNVERIFIED and needs Dr. Lee's review before
+// launch. Which retainer types she actually fits, and the replacement policy
+// described under "Cost", are guesses. The cost band is a typical US figure,
+// not her fee, and must be replaced or pulled.
+//
+// Note this page is shorter than the other three on purpose — retention is a
+// simpler subject and padding it out would show.
+const specs = [
+  { label: "Who", value: "Everyone, after treatment" },
+  { label: "Wear", value: "Nightly, long term" },
+  { label: "Replace", value: "Every few years" },
+  { label: "Typical cost", value: "$300–$800" },
+];
+
+const types = [
+  {
+    title: "Clear retainers",
+    copy: "A thin transparent shell moulded to your finished teeth. The most common choice, and almost invisible if you are wearing one during the day.",
+    points: [
+      "Nearly invisible",
+      "Removable for eating",
+      "Replaceable from your final scan",
+      "Warps in heat — keep it away from hot water",
+    ],
+  },
+  {
+    title: "Bonded retainers",
+    copy: "A thin wire fixed behind the front teeth, usually the lower ones. It works whether or not you remember it, which is the entire argument for it.",
+    points: [
+      "Permanent and invisible",
+      "Nothing to remember",
+      "Needs careful flossing",
+      "Often paired with a night-time clear retainer",
+    ],
+  },
+  {
+    title: "Hawley retainers",
+    copy: "The traditional wire-and-acrylic design. More visible and more robust, and it can be adjusted slightly rather than remade.",
+    points: [
+      "Very durable",
+      "Adjustable",
+      "More noticeable",
+      "Useful in specific cases",
+    ],
+  },
+];
+
+const schedule = [
+  {
+    title: "The first few months",
+    copy: "Full time at first in most cases, out only to eat and brush. Teeth are at their most mobile immediately after treatment, and this is when relapse happens fastest.",
+  },
+  {
+    title: "The first year",
+    copy: "Dropping back to nights once Dr. Lee is happy the bite has settled. By this point the retainer should go in without any pressure at all.",
+  },
+  {
+    title: "After that, for good",
+    copy: "Nightly, indefinitely. Teeth drift throughout life — it happens to people who never had braces too. A few nights a week is not the plan, but it beats stopping.",
+  },
+];
+
+const care = [
+  {
+    title: "Heat destroys them",
+    copy: "Hot water, a dishwasher, a car dashboard in July. A clear retainer warps at a lower temperature than people expect, and a warped one does not fit.",
+  },
+  {
+    title: "Clean it cold",
+    copy: "Rinse it every morning and brush it with cool water and a little soap. Toothpaste is abrasive enough to cloud the plastic over time.",
+  },
+  {
+    title: "The case, not the napkin",
+    copy: "Far more retainers are thrown out with lunch than are ever broken. If it is not in your mouth it should be in the case.",
+  },
+  {
+    title: "If it stops fitting",
+    copy: "Call us rather than forcing it. A retainer that has gone tight means the teeth have already moved, and that is much easier to deal with in week one than in month six.",
+  },
+];
+
+const faqs = [
+  {
+    q: "What happens if I stop wearing it?",
+    a: "Your teeth move back, gradually and permanently. It is the single most common reason adults come to us for a second course of treatment — braces as a teenager, retainers abandoned at twenty, crowded front teeth by thirty.",
+  },
+  {
+    q: "Really forever?",
+    a: "Yes, and we would rather say so than let you find out. Teeth drift for life whether or not you had orthodontic treatment. A retainer at night is what holds the result you paid for.",
+  },
+  {
+    q: "I lost mine. What now?",
+    a: "Call the office. We keep your final digital scan, so in many cases a replacement can be made without taking a new impression — but get in quickly, because once the teeth have shifted the old scan no longer matches.",
+  },
+  {
+    q: "Can I have a bonded one so I do not have to think about it?",
+    a: "Often yes, usually behind the lower front teeth. It does need proper flossing with a threader, and it can come unstuck without you noticing, so it is normally paired with a clear retainer at night rather than used alone.",
+  },
+  {
+    q: "My teeth have already moved. Is it too late?",
+    a: "No. Minor relapse is sometimes correctable with a new retainer or a short course of aligners rather than full treatment. Come in and we will tell you which of those it is.",
+  },
+  {
+    q: "Do you make retainers for people treated elsewhere?",
+    a: "Yes. If your teeth are currently where you want them, we can scan and make you a new retainer without you starting treatment here.",
+  },
+];
+---
+
+<Layout
+  title="Retainers · Torrey Hills Orthodontics"
+  description="Retainers and retention care in Carmel Valley, San Diego. The types, how long you wear them, what replacements cost, and why stopping is the most common reason people need treatment twice."
+>
+  <Navbar />
+
+  <main>
+    {/* Dark band so the navbar's white links have something to sit on before
+        the scrolled glass bar fades in — see .tpage-head in Layout.astro */}
+    <header class="tpage-head">
+      <div class="tpage-head-inner">
+        <nav class="crumbs" aria-label="Breadcrumb">
+          <a href={home}>Home</a>
+          <span aria-hidden="true">/</span>
+          <a href={`${home}#services`}>Treatments</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">Retainers</span>
+        </nav>
+
+        <p class="section-eyebrow tpage-eyebrow">Treatment</p>
+        <h1 class="tpage-title">Retainers</h1>
+        <p class="tpage-lede">
+          The least interesting part of orthodontics and the one that decides
+          whether any of the rest of it lasts. Teeth drift for the whole of
+          your life. A retainer is the only thing that holds them.
+        </p>
+
+        <dl class="spec-strip">
+          {
+            specs.map(({ label, value }) => (
+              <div class="spec">
+                <dt class="spec-label">{label}</dt>
+                <dd class="spec-value">{value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </header>
+
+    <section class="tsection">
+      <div class="tsection-inner">
+        <p class="section-eyebrow">The options</p>
+        <h2 class="section-heading">Three kinds, and most people get two</h2>
+        <p class="section-subline steps-subline">
+          A bonded wire below and a clear retainer above is the usual
+          combination. Dr. Lee will tell you which your case needs rather than
+          leaving it as a menu.
+        </p>
+        <div class="type-cards">
+          {
+            types.map(({ title, copy, points }) => (
+              <article class="type-card">
+                <h3 class="type-card-title">{title}</h3>
+                <p class="type-card-copy">{copy}</p>
+                <ul class="treatment-points">
+                  {points.map((point) => (
+                    <li>{point}</li>
+                  ))}
+                </ul>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="tsection tsection-band">
+      <div class="tsection-inner">
+        <h2 class="section-heading">How long you actually wear it</h2>
+        <p class="section-subline steps-subline">
+          The honest answer is the one nobody wants, so we put it on the page
+          rather than saving it for the day the braces come off.
+        </p>
+        <ol class="steps">
+          {
+            schedule.map(({ title, copy }, i) => (
+              <li class="step">
+                <span class="step-num" aria-hidden="true">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <h3 class="step-title">{title}</h3>
+                <p class="step-copy">{copy}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </section>
+
+    <section class="tsection">
+      <div class="tsection-inner">
+        <p class="section-eyebrow">Day to day</p>
+        <h2 class="section-heading">Looking after them</h2>
+        <div class="care-grid">
+          {
+            care.map(({ title, copy }) => (
+              <div class="care">
+                <h3 class="care-title">{title}</h3>
+                <p class="care-copy">{copy}</p>
+              </div>
+            ))
+          }
+        </div>
+        {/* PLACEHOLDER figure and policy — both need confirming with Dr. Lee */}
+        <p class="cost-note">
+          Retainers are included in the cost of treatment here. Replacements
+          typically run $300 to $800 depending on the type and whether we can
+          work from your existing scan — call us before ordering one, because
+          the answer depends on how long it has been.
+        </p>
+      </div>
+    </section>
+
+    <section class="faq">
+      <div class="faq-inner">
+        <div class="faq-intro">
+          <p class="section-eyebrow">Before you book</p>
+          <h2 class="section-heading">Questions about retainers</h2>
+          <p class="section-subline">
+            Anything here you want to go through properly, call the office and
+            ask. We would rather answer it now than after your teeth move.
+          </p>
+        </div>
+
+        {/* Own accordion name so it cannot interact with any other set */}
+        <div class="faq-list">
+          {
+            faqs.map(({ q, a }) => (
+              <details class="faq-item" name="retainers-faq">
+                <summary>
+                  <span class="faq-question">{q}</span>
+                  <svg class="faq-icon" viewBox="0 0 16 16" aria-hidden="true">
+                    <path d="M3 6l5 5 5-5" />
+                  </svg>
+                </summary>
+                <p class="faq-answer">{a}</p>
+              </details>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Consult />
+  <Footer />
+</Layout>

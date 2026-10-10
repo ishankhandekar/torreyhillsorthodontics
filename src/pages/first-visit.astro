@@ -1,0 +1,246 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar.astro";
+import Consult from "../components/Consult.astro";
+import Footer from "../components/Footer.astro";
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const home = `${base}/`;
+
+// UNVERIFIED — all of this needs confirming with the practice before launch.
+// The specifics most likely to be wrong are the ones that sound most
+// reassuring: that the consultation is free, that there are no x-rays at the
+// first visit, and that a plan and a price are always given the same day.
+const specs = [
+  { label: "How long", value: "About 45 minutes" },
+  { label: "What it costs", value: "No charge" },
+  { label: "Referral", value: "Not needed" },
+  { label: "You leave with", value: "A plan and a price" },
+];
+
+const steps = [
+  {
+    title: "Arrive",
+    copy: "A short form at the desk if you have not filled one in already, and then you are taken straight through. We book consultations so they do not stack up behind each other.",
+  },
+  {
+    title: "Examination",
+    copy: "Dr. Lee looks at your teeth, your bite and how your jaw moves. If you are here for a child, she is also looking at how the adult teeth are coming through.",
+  },
+  {
+    title: "Digital scan",
+    copy: "A handheld scanner builds a 3D model of your teeth in a few minutes. No putty trays. You see the model on screen while she talks through it.",
+  },
+  {
+    title: "The conversation",
+    copy: "What she found, whether treatment is worth doing, which options suit your case, and how long each would take. This is most of the appointment.",
+  },
+  {
+    title: "Cost and timing",
+    copy: "The fee in writing before you leave, along with what insurance is likely to cover and what a monthly plan would look like. Nothing is booked on the spot unless you want it to be.",
+  },
+];
+
+const bring = [
+  "Photo ID and your insurance card, if you have orthodontic cover",
+  "Any x-rays taken by your dentist in the last six months — we will not repeat them",
+  "A list of the questions you actually want answered, which people forget",
+  "For a child: whoever is able to make the decision about treatment",
+];
+
+const outcomes = [
+  {
+    title: "Treatment makes sense now",
+    copy: "You get the options, the timeline and the fee. Most people take that away and think about it. There is no deposit and no deadline on the quote.",
+  },
+  {
+    title: "It is too early",
+    copy: "Common for children around seven. We put you on a recall and see you every six to twelve months until the time is right. Those visits are free.",
+  },
+  {
+    title: "You do not need us",
+    copy: "Sometimes the answer is that the bite is fine and the thing you noticed is cosmetic and not worth treating. Dr. Lee will say so rather than find you something.",
+  },
+  {
+    title: "It is a dental problem",
+    copy: "Decay, gum disease or a tooth that needs restoring come before orthodontics. We will tell you what to get sorted first and send you back to your dentist.",
+  },
+];
+
+const faqs = [
+  {
+    q: "Do I need a referral from my dentist?",
+    a: "No. Most of our patients book directly. If your dentist did refer you, bring any recent x-rays so we do not repeat them.",
+  },
+  {
+    q: "Will anything be done at the first visit?",
+    a: "No treatment, no. It is an examination, a scan and a conversation. Braces or aligners start at a later appointment once you have decided and we have planned the case.",
+  },
+  {
+    q: "Does it hurt?",
+    a: "Nothing at this visit is uncomfortable. The scanner is a wand that goes around your teeth, and the examination is Dr. Lee looking and feeling how the jaw moves.",
+  },
+  {
+    q: "Can I bring my child's sibling along?",
+    a: "Yes, and if they are near seven it is worth having them looked at while you are here rather than making a second trip.",
+  },
+  {
+    q: "What if I decide not to go ahead?",
+    a: "Then nothing happens and it has cost you forty-five minutes. We would rather you left with a clear answer than felt pushed into something.",
+  },
+  {
+    q: "How soon can I be seen?",
+    a: "Usually within a week or two. Call the office and ask — if something has opened up, we would rather fill it.",
+  },
+];
+---
+
+<Layout
+  title="Your First Visit · Torrey Hills Orthodontics"
+  description="What happens at your first consultation with Dr. Judy Lee in Carmel Valley, San Diego — how long it takes, what to bring, what it costs, and what you leave with."
+>
+  <Navbar />
+
+  <main>
+    {/* Dark band so the navbar's white links have something to sit on before
+        the scrolled glass bar fades in — see .tpage-head in Layout.astro */}
+    <header class="tpage-head tpage-head-tall">
+      <div class="tpage-head-inner">
+        <nav class="crumbs" aria-label="Breadcrumb">
+          <a href={home}>Home</a>
+          <span aria-hidden="true">/</span>
+          {/* Not a link: there is no /patients hub page, by design */}
+          <span>Patients</span>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">Your first visit</span>
+        </nav>
+
+        <p class="section-eyebrow tpage-eyebrow">Patients</p>
+        <h1 class="tpage-title">Your First Visit</h1>
+        <p class="tpage-lede">
+          Forty-five minutes, no charge, and no obligation to start anything.
+          You leave knowing whether you need treatment, what it would involve
+          and what it would cost — in writing.
+        </p>
+
+        <dl class="spec-strip">
+          {
+            specs.map(({ label, value }) => (
+              <div class="spec">
+                <dt class="spec-label">{label}</dt>
+                <dd class="spec-value">{value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </header>
+
+    {/* PLACEHOLDER photo: the shared hero image stands in until real office
+        photography exists. Decorative — the caption is the content — so it
+        is a background div, matching the other placeholders in the site. */}
+    <figure class="visit-figure">
+      <div class="visit-photo" role="presentation"></div>
+      <figcaption class="visit-caption">
+        Consultations run about forty-five minutes, and you see Dr. Lee
+        herself — there is one orthodontist here, not a rotation.
+      </figcaption>
+    </figure>
+
+    <section class="tsection">
+      <div class="tsection-inner">
+        <h2 class="section-heading">What actually happens</h2>
+        <p class="section-subline steps-subline">
+          Five stages, and most of the time goes on the fourth one. You see
+          Dr. Lee herself — there is one orthodontist here, not a rotation.
+        </p>
+        <ol class="steps">
+          {
+            steps.map(({ title, copy }, i) => (
+              <li class="step">
+                <span class="step-num" aria-hidden="true">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <h3 class="step-title">{title}</h3>
+                <p class="step-copy">{copy}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </section>
+
+    <section class="tsection tsection-band">
+      <div class="tsection-inner tsplit">
+        <div class="tsplit-intro">
+          <p class="section-eyebrow">Come prepared</p>
+          <h2 class="section-heading">What to bring</h2>
+          <p class="section-subline tsplit-subline">
+            None of it is essential. Turning up with nothing but yourself still
+            works — it just means a second trip for the x-rays.
+          </p>
+          {/* PLACEHOLDER photo, cropped differently from the band above so
+              the same source image does not read as a repeat */}
+          <div class="visit-inline-photo" role="presentation"></div>
+        </div>
+        <ul class="case-list">
+          {bring.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+    </section>
+
+    <section class="tsection">
+      <div class="tsection-inner">
+        <p class="section-eyebrow">Afterwards</p>
+        <h2 class="section-heading">Four ways this can go</h2>
+        <p class="section-subline steps-subline">
+          Only one of them involves booking treatment, and that is not an
+          accident. A consultation is a question, not a sales appointment.
+        </p>
+        <div class="care-grid">
+          {
+            outcomes.map(({ title, copy }) => (
+              <div class="care">
+                <h3 class="care-title">{title}</h3>
+                <p class="care-copy">{copy}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="faq">
+      <div class="faq-inner">
+        <div class="faq-intro">
+          <p class="section-eyebrow">Before you book</p>
+          <h2 class="section-heading">Questions about the first visit</h2>
+          <p class="section-subline">
+            Anything here you want to go through properly, call the office and
+            ask. We would rather answer it now than when you are in the chair.
+          </p>
+        </div>
+
+        {/* Own accordion name so it cannot interact with any other set */}
+        <div class="faq-list">
+          {
+            faqs.map(({ q, a }) => (
+              <details class="faq-item" name="first-visit-faq">
+                <summary>
+                  <span class="faq-question">{q}</span>
+                  <svg class="faq-icon" viewBox="0 0 16 16" aria-hidden="true">
+                    <path d="M3 6l5 5 5-5" />
+                  </svg>
+                </summary>
+                <p class="faq-answer">{a}</p>
+              </details>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Consult />
+  <Footer />
+</Layout>

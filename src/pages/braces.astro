@@ -1,0 +1,326 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar.astro";
+import Consult from "../components/Consult.astro";
+import Footer from "../components/Footer.astro";
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const home = `${base}/`;
+
+// ALL CLINICAL CONTENT ON THIS PAGE IS UNVERIFIED and needs Dr. Lee's review
+// before launch. The ranges below are typical US figures, not this practice's.
+// The cost band in particular must be replaced with her real fees or pulled:
+// a patient could reasonably rely on it.
+const specs = [
+  { label: "Ages", value: "7 and up" },
+  { label: "Typical length", value: "18–30 months" },
+  { label: "Visits", value: "Every 6–8 weeks" },
+  { label: "Typical cost", value: "$3,500–$7,000" },
+];
+
+const types = [
+  {
+    title: "Metal brackets",
+    copy: "Stainless steel, bonded to the front of each tooth. The strongest and most predictable option, and the one that handles the hardest cases.",
+    points: [
+      "Smallest brackets we fit",
+      "Most durable — fewest breakages",
+      "Coloured elastics if you want them",
+      "Usually the lowest cost",
+    ],
+  },
+  {
+    title: "Ceramic brackets",
+    copy: "The same mechanics in a tooth-coloured ceramic, so they read as much less visible at conversational distance without giving up control of the bite.",
+    points: [
+      "Blends with enamel shade",
+      "Same treatment times as metal",
+      "Slightly larger and more brittle",
+      "Common choice for adults",
+    ],
+  },
+];
+
+const cases = [
+  "Bite problems — overbite, underbite, crossbite or an open bite",
+  "Teeth that are badly crowded or rotated in the socket",
+  "Movements aligners handle poorly, like bringing a tooth down vertically",
+  "Children and teens still growing, where braces follow a growth appliance",
+  "Anyone who knows they would not wear aligners 22 hours a day",
+];
+
+const steps = [
+  {
+    title: "Consultation",
+    copy: "About forty-five minutes. Dr. Lee examines your bite, takes a digital scan, and gives you the plan, the timeline and the cost in writing before you leave.",
+  },
+  {
+    title: "Fitting",
+    copy: "One appointment, an hour or so. Brackets are bonded to each tooth and the first wire goes in. Nothing is drilled and no anaesthetic is needed.",
+  },
+  {
+    title: "Adjustments",
+    copy: "Every six to eight weeks, fifteen to thirty minutes. The wire is changed or tightened to keep steady pressure on the teeth. Dr. Lee does every one of these herself.",
+  },
+  {
+    title: "Removal",
+    copy: "Brackets come off in a single visit, the adhesive is polished away, and we take a final scan the same day so your retainers fit the result exactly.",
+  },
+  {
+    title: "Retainers",
+    copy: "Nightly, long term. Teeth drift for the rest of your life, and retainers are the only thing that holds the result. This part is not optional.",
+  },
+];
+
+const costs = [
+  {
+    title: "A fixed quote, in writing",
+    copy: "You get the full fee at the consultation, before anything starts. It does not change because treatment ran long.",
+  },
+  {
+    title: "Monthly payment plans",
+    copy: "Most families spread the fee across the treatment with a deposit up front. Ask at the consultation what the monthly figure would be.",
+  },
+  {
+    title: "We file your insurance",
+    copy: "We take most PPO plans and submit the claim for you. Orthodontic cover is usually a lifetime maximum rather than an annual one, so we check what is left before quoting.",
+  },
+  {
+    title: "FSA and HSA eligible",
+    copy: "Orthodontic treatment is a qualified medical expense, so pre-tax dollars can go toward it.",
+  },
+];
+
+const care = [
+  {
+    title: "Eating",
+    copy: "Nothing hard, sticky or chewy — ice, nuts, hard sweets, caramel, bagels. Cut apples and corn off the cob rather than biting into them.",
+  },
+  {
+    title: "Cleaning",
+    copy: "Brush after meals and floss once a day with a threader or a water flosser. Brackets trap plaque, and the marks it leaves outlast the braces.",
+  },
+  {
+    title: "Soreness",
+    copy: "The first few days and the day after each adjustment. Soft food and ordinary pain relief cover it; wax over a bracket that is rubbing.",
+  },
+  {
+    title: "If something breaks",
+    copy: "Call the office and we will usually see you the same day. A loose bracket is rarely urgent, but do not leave a poking wire — that one we fix straight away.",
+  },
+];
+
+const faqs = [
+  {
+    q: "Do braces hurt?",
+    a: "Fitting them does not. The teeth ache for two or three days afterwards as they start to move, and for a day after each adjustment. It is soreness rather than pain, and ordinary pain relief handles it.",
+  },
+  {
+    q: "Can I still play sports or an instrument?",
+    a: "Yes to both. Wear a mouthguard for contact sports — we can fit one over braces. Brass and woodwind players usually need a week or two to adjust, and wax helps while you do.",
+  },
+  {
+    q: "Will braces stain my teeth?",
+    a: "The braces will not, but plaque left sitting around a bracket will, and those marks are permanent. This is the main reason we are strict about brushing.",
+  },
+  {
+    q: "Metal or ceramic — does it change the result?",
+    a: "No. Same mechanics, same timeline. Ceramic is less visible and slightly more fragile, so it costs a little more and breaks a little more often. Dr. Lee will say if your case is one where metal is the sensible choice.",
+  },
+  {
+    q: "I had braces as a teenager and my teeth moved back. Can I do it again?",
+    a: "Yes, and it is one of the more common things we treat. Relapse after retainers were stopped is usually a shorter course than the original treatment.",
+  },
+  {
+    q: "How is this different from clear aligners?",
+    a: "Aligners are removable and nearly invisible, but they only work while you are actually wearing them. Braces are fixed, so they work whether or not you remember. For complex bite correction braces still have more control.",
+  },
+];
+---
+
+<Layout
+  title="Braces · Torrey Hills Orthodontics"
+  description="Metal and ceramic braces for children, teens and adults in Carmel Valley, San Diego. What they cost, how long they take, and what treatment with Dr. Judy Lee actually involves."
+>
+  <Navbar />
+
+  <main>
+    {/* The header band is dark for a structural reason, not a stylistic one:
+        the navbar's links are white and it sits transparent until you scroll,
+        so a light band at the top of the page would hide it entirely. */}
+    <header class="tpage-head">
+      <div class="tpage-head-inner">
+        <nav class="crumbs" aria-label="Breadcrumb">
+          <a href={home}>Home</a>
+          <span aria-hidden="true">/</span>
+          <a href={`${home}#services`}>Treatments</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">Braces</span>
+        </nav>
+
+        <p class="section-eyebrow tpage-eyebrow">Treatment</p>
+        <h1 class="tpage-title">Braces</h1>
+        <p class="tpage-lede">
+          Braces move teeth with steady, continuous pressure — a wire threaded
+          through brackets and adjusted every few weeks. They are the most
+          predictable tool in orthodontics, and for a complicated bite they are
+          still the best one.
+        </p>
+
+        <dl class="spec-strip">
+          {
+            specs.map(({ label, value }) => (
+              <div class="spec">
+                <dt class="spec-label">{label}</dt>
+                <dd class="spec-value">{value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </header>
+
+    <section class="tsection">
+      <div class="tsection-inner tsplit">
+        <div class="tsplit-intro">
+          <h2 class="section-heading">Two kinds, one set of mechanics</h2>
+          <p class="section-subline tsplit-subline">
+            The choice between them is cosmetic. It does not change how long
+            treatment takes or what it can correct.
+          </p>
+        </div>
+        <div class="type-cards">
+          {
+            types.map(({ title, copy, points }) => (
+              <article class="type-card">
+                <h3 class="type-card-title">{title}</h3>
+                <p class="type-card-copy">{copy}</p>
+                <ul class="treatment-points">
+                  {points.map((point) => (
+                    <li>{point}</li>
+                  ))}
+                </ul>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="tsection tsection-band">
+      <div class="tsection-inner tsplit">
+        <div class="tsplit-intro">
+          <p class="section-eyebrow">Is this you</p>
+          <h2 class="section-heading">When braces are the better choice</h2>
+          <p class="section-subline tsplit-subline">
+            Most people could be treated either way. These are the cases where
+            Dr. Lee will tell you braces are the right call.
+          </p>
+        </div>
+        <ul class="case-list">
+          {cases.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+    </section>
+
+    <section class="tsection">
+      <div class="tsection-inner">
+        <h2 class="section-heading">What treatment actually looks like</h2>
+        <p class="section-subline steps-subline">
+          Five stages, start to finish. Whoever plans your treatment is who
+          adjusts it — there is one orthodontist here, not a rotation.
+        </p>
+        <ol class="steps">
+          {
+            steps.map(({ title, copy }, i) => (
+              <li class="step">
+                <span class="step-num" aria-hidden="true">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <h3 class="step-title">{title}</h3>
+                <p class="step-copy">{copy}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </section>
+
+    <section class="tsection tsection-band">
+      <div class="tsection-inner">
+        <p class="section-eyebrow">Cost and insurance</p>
+        <h2 class="section-heading">No surprises on the fee</h2>
+        <p class="section-subline steps-subline">
+          Cost is the first thing most people want to know and the last thing
+          most practices put on a page. Here it is.
+        </p>
+        <div class="cost-grid">
+          {
+            costs.map(({ title, copy }) => (
+              <div class="cost">
+                <h3 class="cost-title">{title}</h3>
+                <p class="cost-copy">{copy}</p>
+              </div>
+            ))
+          }
+        </div>
+        {/* PLACEHOLDER figure — must be Dr. Lee's real range or removed */}
+        <p class="cost-note">
+          Full braces treatment here typically runs $3,500 to $7,000 depending
+          on how complex the case is and how long it takes. Your exact figure
+          comes at the consultation, in writing, before anything begins.
+        </p>
+      </div>
+    </section>
+
+    <section class="tsection">
+      <div class="tsection-inner">
+        <p class="section-eyebrow">Day to day</p>
+        <h2 class="section-heading">Living with braces</h2>
+        <div class="care-grid">
+          {
+            care.map(({ title, copy }) => (
+              <div class="care">
+                <h3 class="care-title">{title}</h3>
+                <p class="care-copy">{copy}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="faq">
+      <div class="faq-inner">
+        <div class="faq-intro">
+          <p class="section-eyebrow">Before you book</p>
+          <h2 class="section-heading">Questions about braces</h2>
+          <p class="section-subline">
+            Anything here you want to go through properly, call the office and
+            ask. We would rather answer it now than at your first visit.
+          </p>
+        </div>
+
+        {/* Own accordion name so it cannot interact with the homepage set */}
+        <div class="faq-list">
+          {
+            faqs.map(({ q, a }) => (
+              <details class="faq-item" name="braces-faq">
+                <summary>
+                  <span class="faq-question">{q}</span>
+                  <svg class="faq-icon" viewBox="0 0 16 16" aria-hidden="true">
+                    <path d="M3 6l5 5 5-5" />
+                  </svg>
+                </summary>
+                <p class="faq-answer">{a}</p>
+              </details>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Consult />
+  <Footer />
+</Layout>

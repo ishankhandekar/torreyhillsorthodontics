@@ -1,0 +1,307 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar.astro";
+import Consult from "../components/Consult.astro";
+import Footer from "../components/Footer.astro";
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const home = `${base}/`;
+
+// ALL CLINICAL CONTENT HERE IS UNVERIFIED and needs Dr. Lee's review before
+// launch. Ranges are typical US figures, not this practice's. The cost band
+// must be replaced with her real fees or pulled — a patient could rely on it.
+// The brand of aligner used is also unconfirmed; the copy deliberately avoids
+// naming one, which also keeps us clear of anyone's trademark guidelines.
+const specs = [
+  { label: "Ages", value: "Teens and adults" },
+  { label: "Typical length", value: "12–18 months" },
+  { label: "Visits", value: "Every 8–10 weeks" },
+  { label: "Typical cost", value: "$4,000–$7,000" },
+];
+
+const goodFor = [
+  "Crowding and spacing that is mild to moderate",
+  "Teeth that have drifted back after braces years ago",
+  "Mild bite correction, often with small attachments bonded on",
+  "Adults who cannot have visible brackets at work",
+  "Anyone who would rather take them out to eat and brush normally",
+];
+
+const harderFor = [
+  "Large bite corrections and significant jaw discrepancies",
+  "Teeth that need to rotate a long way, especially canines",
+  "Moving a tooth bodily or pulling one down into the arch",
+  "Children still growing, where an appliance has to come first",
+  "Anyone who honestly will not wear them 20 to 22 hours a day",
+];
+
+const steps = [
+  {
+    title: "Consultation",
+    copy: "About forty-five minutes. Dr. Lee checks whether your case suits aligners at all and says so plainly if braces would do it better. Plan and cost in writing before you leave.",
+  },
+  {
+    title: "Digital scan",
+    copy: "No putty impressions. A handheld scanner builds a 3D model of your teeth, which is what the trays are manufactured from and what the movement plan is built on.",
+  },
+  {
+    title: "Wearing the trays",
+    copy: "A new set roughly every one to two weeks, each one moving the teeth a fraction further. Twenty to twenty-two hours a day, out only for meals and brushing.",
+  },
+  {
+    title: "Check-ins",
+    copy: "Every eight to ten weeks so Dr. Lee can confirm the teeth are tracking the plan. If they are not, we find out here rather than at the end.",
+  },
+  {
+    title: "Refinement and retainers",
+    copy: "Most cases finish with a short second run of trays to tidy up the last details. Then retainers, nightly and long term — the same rule as braces.",
+  },
+];
+
+const costs = [
+  {
+    title: "A fixed quote, in writing",
+    copy: "The full fee at the consultation, before anything starts. Refinement trays at the end are part of it, not an extra.",
+  },
+  {
+    title: "Monthly payment plans",
+    copy: "Most patients spread the fee across treatment with a deposit up front. Ask at the consultation what the monthly figure looks like.",
+  },
+  {
+    title: "We file your insurance",
+    copy: "Most PPO plans cover aligners on the same terms as braces — the benefit is usually a lifetime maximum, so we check what is left before quoting.",
+  },
+  {
+    title: "FSA and HSA eligible",
+    copy: "Orthodontic treatment is a qualified medical expense, so pre-tax dollars can go toward it.",
+  },
+];
+
+const care = [
+  {
+    title: "Wear time is the treatment",
+    copy: "Twenty to twenty-two hours a day. Aligners do nothing in a case on the counter, and the plan assumes they are in. This is the one thing that decides whether you finish on time.",
+  },
+  {
+    title: "Eating and drinking",
+    copy: "Trays out for everything except plain water. Hot drinks warp them, and anything with sugar or colour sits trapped against the enamel.",
+  },
+  {
+    title: "Cleaning",
+    copy: "Rinse and brush the trays with cool water — hot water deforms them. Brush your teeth before they go back in, or you seal plaque against them for hours.",
+  },
+  {
+    title: "If you lose one",
+    copy: "Call us, and go back to the previous set in the meantime rather than skipping ahead. We will usually have you in the next tray or a replacement quickly.",
+  },
+];
+
+const faqs = [
+  {
+    q: "Can people tell I am wearing them?",
+    a: "At conversational distance, usually not. Small tooth-coloured attachments are bonded to some teeth to give the trays something to push against, and those are the part people occasionally notice rather than the plastic itself.",
+  },
+  {
+    q: "Do they hurt?",
+    a: "There is pressure and tenderness for a day or so each time you change to a new set. It is milder than a braces adjustment, and it settles as the teeth move into the tray.",
+  },
+  {
+    q: "Will they affect my speech?",
+    a: "A slight lisp for a few days at the start is common and almost always goes once your tongue adjusts. Talking through it speeds that up.",
+  },
+  {
+    q: "What happens if I do not wear them enough?",
+    a: "The teeth stop tracking the trays, the trays stop fitting, and treatment either stretches out or needs re-planning from a new scan. This is the single most common reason aligner treatment runs long.",
+  },
+  {
+    q: "Can my teenager have aligners?",
+    a: "Often yes, and the trays can include a small indicator that fades to show they are being worn. Whether it is the right call depends on the case and, honestly, on the teenager.",
+  },
+  {
+    q: "Is this the same as the mail-order kits?",
+    a: "No. Those have no in-person examination, no x-rays, and no one supervising the result. Here Dr. Lee examines you first, checks the roots and the bite, and sees you throughout. Moving teeth without that is how people end up with problems that cost more to fix than the treatment did.",
+  },
+];
+---
+
+<Layout
+  title="Clear Aligners · Torrey Hills Orthodontics"
+  description="Clear aligner treatment for teens and adults in Carmel Valley, San Diego. What they cost, how long they take, what they can and cannot correct, and what treatment with Dr. Judy Lee involves."
+>
+  <Navbar />
+
+  <main>
+    {/* Dark band so the navbar's white links have something to sit on before
+        the scrolled glass bar fades in — see .tpage-head in Layout.astro */}
+    <header class="tpage-head">
+      <div class="tpage-head-inner">
+        <nav class="crumbs" aria-label="Breadcrumb">
+          <a href={home}>Home</a>
+          <span aria-hidden="true">/</span>
+          <a href={`${home}#services`}>Treatments</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">Clear Aligners</span>
+        </nav>
+
+        <p class="section-eyebrow tpage-eyebrow">Treatment</p>
+        <h1 class="tpage-title">Clear Aligners</h1>
+        <p class="tpage-lede">
+          A series of clear, removable trays, each one shaped slightly closer
+          to where your teeth should end up. They are very hard to see and you
+          take them out to eat — and they only work while they are in.
+        </p>
+
+        <dl class="spec-strip">
+          {
+            specs.map(({ label, value }) => (
+              <div class="spec">
+                <dt class="spec-label">{label}</dt>
+                <dd class="spec-value">{value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </header>
+
+    <section class="tsection">
+      <div class="tsection-inner">
+        <div class="tsplit">
+          <div class="tsplit-intro">
+            <p class="section-eyebrow">The honest version</p>
+            <h2 class="section-heading">Aligners ask something of you</h2>
+            <p class="section-subline tsplit-subline">
+              Braces work whether or not you remember them. Aligners are a
+              deal: you get the invisibility and the removability, and in
+              exchange the result depends on you putting them back in.
+            </p>
+          </div>
+          <p class="section-statement">
+            Twenty to twenty-two hours a day is not a target, it is the
+            prescription — the movement plan is calculated on that number. An
+            hour or two short most days and the teeth fall behind the trays,
+            which is how a twelve-month case quietly becomes an eighteen-month
+            one. Dr. Lee would rather tell you at the consultation that braces
+            suit your life better than start you on something that needs a
+            discipline you did not sign up for.
+          </p>
+        </div>
+
+        <div class="compare-grid">
+          <div>
+            <h3 class="compare-title">What they handle well</h3>
+            <ul class="case-list">
+              {goodFor.map((item) => <li>{item}</li>)}
+            </ul>
+          </div>
+          <div>
+            <h3 class="compare-title">Where braces do better</h3>
+            <ul class="case-list">
+              {harderFor.map((item) => <li>{item}</li>)}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tsection tsection-band">
+      <div class="tsection-inner">
+        <h2 class="section-heading">What treatment actually looks like</h2>
+        <p class="section-subline steps-subline">
+          Five stages, start to finish. Whoever plans your treatment is who
+          checks it — there is one orthodontist here, not a rotation.
+        </p>
+        <ol class="steps">
+          {
+            steps.map(({ title, copy }, i) => (
+              <li class="step">
+                <span class="step-num" aria-hidden="true">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <h3 class="step-title">{title}</h3>
+                <p class="step-copy">{copy}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </section>
+
+    <section class="tsection">
+      <div class="tsection-inner">
+        <p class="section-eyebrow">Cost and insurance</p>
+        <h2 class="section-heading">No surprises on the fee</h2>
+        <p class="section-subline steps-subline">
+          Aligners usually sit a little above braces, because the trays are
+          manufactured for you and most cases need a refinement run at the end.
+        </p>
+        <div class="cost-grid">
+          {
+            costs.map(({ title, copy }) => (
+              <div class="cost">
+                <h3 class="cost-title">{title}</h3>
+                <p class="cost-copy">{copy}</p>
+              </div>
+            ))
+          }
+        </div>
+        {/* PLACEHOLDER figure — must be Dr. Lee's real range or removed */}
+        <p class="cost-note">
+          Aligner treatment here typically runs $4,000 to $7,000 depending on
+          how much movement is involved. Your exact figure comes at the
+          consultation, in writing, before anything begins.
+        </p>
+      </div>
+    </section>
+
+    <section class="tsection tsection-band">
+      <div class="tsection-inner">
+        <p class="section-eyebrow">Day to day</p>
+        <h2 class="section-heading">Living with aligners</h2>
+        <div class="care-grid">
+          {
+            care.map(({ title, copy }) => (
+              <div class="care">
+                <h3 class="care-title">{title}</h3>
+                <p class="care-copy">{copy}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="faq">
+      <div class="faq-inner">
+        <div class="faq-intro">
+          <p class="section-eyebrow">Before you book</p>
+          <h2 class="section-heading">Questions about aligners</h2>
+          <p class="section-subline">
+            Anything here you want to go through properly, call the office and
+            ask. We would rather answer it now than at your first visit.
+          </p>
+        </div>
+
+        {/* Own accordion name so it cannot interact with any other set */}
+        <div class="faq-list">
+          {
+            faqs.map(({ q, a }) => (
+              <details class="faq-item" name="aligners-faq">
+                <summary>
+                  <span class="faq-question">{q}</span>
+                  <svg class="faq-icon" viewBox="0 0 16 16" aria-hidden="true">
+                    <path d="M3 6l5 5 5-5" />
+                  </svg>
+                </summary>
+                <p class="faq-answer">{a}</p>
+              </details>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Consult />
+  <Footer />
+</Layout>

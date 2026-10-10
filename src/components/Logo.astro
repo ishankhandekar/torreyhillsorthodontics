@@ -1,14 +1,21 @@
 ---
-// Shared by the navbar and the footer. Colour comes from the surrounding
-// section — .footer restyles it dark against the band.
+// Shared by the navbar, the footer and the contact section. Colour comes
+// from the surrounding section — .footer restyles it dark against the band.
 interface Props {
   href?: string;
+  // Two-line lockup. The rail wants one line, because a stacked mark is the
+  // tallest thing in it; anywhere the logo is the focal point wants this.
+  stacked?: boolean;
 }
 
-const { href = "#" } = Astro.props;
+const { href = "#", stacked = false } = Astro.props;
 ---
 
-<a href={href} class="logo" aria-label="Torrey Hills Orthodontics home">
+<a
+  href={href}
+  class:list={["logo", { "logo-stacked": stacked }]}
+  aria-label="Torrey Hills Orthodontics home"
+>
   <svg class="logo-mark" viewBox="2 2 114 78" aria-hidden="true">
     <path class="logo-wire" d="M8 44C34 86 88 78 110 8"></path>
     <circle cx="8" cy="44" r="5"></circle>
@@ -19,8 +26,14 @@ const { href = "#" } = Astro.props;
     <circle cx="102.4" cy="27.3" r="6.6"></circle>
     <circle cx="110" cy="8" r="5"></circle>
   </svg>
-  <span class="logo-text">
-    <span class="logo-top">Torrey Hills</span>
-    <span class="logo-name">Orthodontics</span>
-  </span>
+  {
+    stacked ? (
+      <span class="logo-text">
+        <span class="logo-top">Torrey Hills</span>
+        <span class="logo-name">Orthodontics</span>
+      </span>
+    ) : (
+      <span class="logo-name">Torrey Hills Orthodontics</span>
+    )
+  }
 </a>

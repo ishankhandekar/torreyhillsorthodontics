@@ -1,0 +1,219 @@
+---
+import Logo from "./Logo.astro";
+
+// Normalised with a trailing slash: BASE_URL arrives without one, and
+// "/base#about" would bounce through a redirect before reaching the anchor
+const home = `${import.meta.env.BASE_URL.replace(/\/$/, "")}/`;
+
+interface MenuItem {
+  label: string;
+  // Omitted where the destination does not exist and the label is a stand-in,
+  // so it renders as text rather than a link that lies about going somewhere
+  href?: string;
+  note?: string;
+}
+
+interface NavEntry {
+  label: string;
+  href?: string;
+  items?: MenuItem[];
+}
+
+// PLACEHOLDER destinations. None of these pages exist yet — every href here
+// 404s until it is built.
+//
+// The two unnamed people in Team are waiting on real names from the practice;
+// swap the label and add an href for each. The Services labels match the
+// treatment cards on the landing page.
+const nav: NavEntry[] = [
+  {
+    label: "Team",
+    items: [
+      { label: "Dr. Judy Lee", href: `${home}team/judy-lee`, note: "Orthodontist" },
+      { label: "Name to come" },
+      { label: "Name to come" },
+    ],
+  },
+  { label: "Smile Gallery", href: `${home}gallery` },
+  {
+    label: "Treatments",
+    items: [
+      { label: "Clear Aligners", href: `${home}clear-aligners` },
+      { label: "Advanced Braces", href: `${home}braces` },
+      { label: "Jaw Orthopedics", href: `${home}early-treatment` },
+      { label: "Retention Care", href: `${home}retainers` },
+    ],
+  },
+  {
+    label: "Patients",
+    items: [
+      { label: "Your first visit", href: `${home}first-visit` },
+      { label: "Insurance and financing", href: `${home}insurance` },
+      { label: "Patient forms", href: `${home}forms` },
+    ],
+  },
+];
+
+const consultation = `${home}consultation`;
+---
+
+<header class="navbar">
+  <Logo href={home} />
+
+  <nav class="nav-links" id="nav-links">
+    {
+      nav.map((entry, i) =>
+        entry.items ? (
+          <div class="nav-item">
+            <button
+              type="button"
+              class="nav-trigger"
+              id={`nav-trigger-${i}`}
+              aria-expanded="false"
+              aria-controls={`nav-menu-${i}`}
+            >
+              {entry.label}
+              <svg class="nav-caret" viewBox="0 0 10 6" aria-hidden="true">
+                <path d="M1 1l4 4 4-4"></path>
+              </svg>
+            </button>
+            <ul
+              class="nav-menu"
+              id={`nav-menu-${i}`}
+              aria-labelledby={`nav-trigger-${i}`}
+            >
+              {entry.items.map(({ label, href, note }) => (
+                <li>
+                  {href ? (
+                    <a href={href}>
+                      {label}
+                      {note && <span class="nav-menu-note">{note}</span>}
+                    </a>
+                  ) : (
+                    <span class="nav-menu-todo">{label}</span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          <a href={entry.href}>{entry.label}</a>
+        ),
+      )
+    }
+  </nav>
+
+  <div class="nav-actions">
+    {/* One muted group: the hours line and the number read as a single
+        "we are open, call us" statement rather than two separate items.
+        PLACEHOLDER hours — still unconfirmed with the practice. */}
+    <p class="nav-status">
+      Open until 5
+      <span class="nav-dot" aria-hidden="true">·</span>
+      <a href="tel:+18584811771">(858) 481-1771</a>
+    </p>
+
+    {/* Was mislabelled "Appointment" — it has always pointed here. A text
+        link rather than a pill: one filled button is the element that would
+        read least like the rest of the rail. */}
+    <a href={consultation} class="nav-cta">
+      Book a consultation
+      <svg viewBox="0 0 16 16" aria-hidden="true">
+        <path d="M4 12 12 4M6 4h6v6"></path>
+      </svg>
+    </a>
+  </div>
+
+  <button
+    class="nav-toggle"
+    aria-label="Open menu"
+    aria-expanded="false"
+    aria-controls="nav-links"
+  >
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<script>
+  const navToggle = document.querySelector<HTMLButtonElement>(".nav-toggle");
+  const navLinks = document.querySelector<HTMLElement>(".nav-links");
+
+  if (navToggle && navLinks) {
+    const setMenu = (open: boolean) => {
+      navLinks.classList.toggle("open", open);
+      navToggle.setAttribute("aria-expanded", String(open));
+      navToggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+      // Lock the page behind the full-screen mobile menu
+      document.body.style.overflow = open ? "hidden" : "";
+    };
+
+    navToggle.addEventListener("click", () => {
+      setMenu(!navLinks.classList.contains("open"));
+    });
+
+    navLinks.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => setMenu(false));
+    });
+  }
+</script>
+
+<script>
+  // Dropdowns. Hover is handled in CSS — this covers keyboard and touch, where
+  // there is no hover to rely on. Below 1024px the triggers are pointer-events:
+  // none group labels and every item is already visible, so none of this fires.
+  const items = document.querySelectorAll<HTMLElement>(".nav-item");
+
+  const closeAll = (except?: HTMLElement) => {
+    items.forEach((item) => {
+      if (item === except) return;
+      item.classList.remove("open");
+      item
+        .querySelector<HTMLButtonElement>(".nav-trigger")
+        ?.setAttribute("aria-expanded", "false");
+    });
+  };
+
+  items.forEach((item) => {
+    const trigger = item.querySelector<HTMLButtonElement>(".nav-trigger");
+    const links = [...item.querySelectorAll<HTMLAnchorElement>(".nav-menu a")];
+    if (!trigger) return;
+
+    const set = (open: boolean) => {
+      if (open) closeAll(item);
+      item.classList.toggle("open", open);
+      trigger.setAttribute("aria-expanded", String(open));
+    };
+
+    trigger.addEventListener("click", () => {
+      set(!item.classList.contains("open"));
+    });
+
+    trigger.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        set(true);
+        links[0]?.focus();
+      } else if (event.key === "Escape") {
+        set(false);
+      }
+    });
+
+    item.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        set(false);
+        trigger.focus();
+      }
+    });
+
+    // Tabbing out of the last item should close it rather than leave an
+    // open menu floating behind the rest of the bar
+    item.addEventListener("focusout", (event) => {
+      if (!item.contains(event.relatedTarget as Node)) set(false);
+    });
+  });
+
+  document.addEventListener("pointerdown", (event) => {
+    const target = event.target as Node;
+    if (![...items].some((item) => item.contains(target))) closeAll();
+  });
+</script>

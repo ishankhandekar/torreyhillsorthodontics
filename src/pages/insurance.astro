@@ -1,0 +1,239 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar.astro";
+import Consult from "../components/Consult.astro";
+import Footer from "../components/Footer.astro";
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const home = `${base}/`;
+
+// UNVERIFIED AND COMMERCIALLY SENSITIVE. Every claim on this page is a
+// promise about money, which makes it the riskiest page on the site to get
+// wrong. None of it is confirmed:
+//   - that the practice is in-network with any PPO, or files claims at all
+//   - that payment plans are interest-free, or what the deposit is
+//   - the $3,500–$7,000 range, which is a typical US figure and not her fee
+//   - that there is no charge for the consultation
+// A patient could reasonably rely on all of it. Confirm line by line with
+// Dr. Lee, or pull the page, before this is published anywhere real.
+const specs = [
+  { label: "Plans", value: "Most PPOs" },
+  { label: "Claims", value: "We file them" },
+  { label: "Payment plans", value: "Interest-free" },
+  { label: "FSA and HSA", value: "Eligible" },
+];
+
+const howItWorks = [
+  "Orthodontic benefit is usually a lifetime maximum, not an annual one — once it is spent, it is gone",
+  "Most plans pay a percentage of the fee up to that maximum, commonly around half",
+  "A lot of plans have a waiting period before orthodontic cover starts",
+  "Many have an age cut-off, so a plan that covers your child may not cover you",
+  "Benefits are normally paid out monthly across treatment rather than in one lump",
+];
+
+const whatWeDo = [
+  {
+    title: "We check before we quote",
+    copy: "We contact your insurer and find out what your plan actually covers and how much of the lifetime maximum is still available, so the number we give you is the number you pay.",
+  },
+  {
+    title: "We file the claim",
+    copy: "The paperwork is ours, not yours, and the insurer pays us directly where the plan allows it. You are billed for the difference.",
+  },
+  {
+    title: "We tell you if it is not worth using",
+    copy: "Occasionally the waiting period or the remaining maximum makes claiming pointless. We would rather say that than process it and have you find out later.",
+  },
+  {
+    title: "No insurance is fine",
+    copy: "Plenty of our patients have no orthodontic cover at all. The fee is the same, and the payment plan is what makes it work.",
+  },
+];
+
+const plans = [
+  {
+    title: "Monthly plan",
+    copy: "A deposit at the start and the rest spread across the months of treatment, interest-free and arranged in-house rather than through a finance company.",
+    points: ["No interest", "No credit check", "Set up at the consultation"],
+  },
+  {
+    title: "Paid in full",
+    copy: "Settling the whole fee up front, usually with a small discount for doing so. Worth asking about if you were planning to pay by card anyway.",
+    points: ["Usually a discount", "One transaction", "Ask for the figure"],
+  },
+  {
+    title: "FSA and HSA",
+    copy: "Orthodontic treatment is a qualified medical expense, so pre-tax dollars can go toward it. These can be combined with a monthly plan.",
+    points: ["Pre-tax dollars", "Combines with a plan", "Keep the receipts"],
+  },
+];
+
+const faqs = [
+  {
+    q: "Do you take my insurance?",
+    a: "We work with most PPO plans. The honest answer for your specific plan takes one phone call — give us the name of the insurer and your member ID and we will check what you have before you come in.",
+  },
+  {
+    q: "What does insurance usually cover?",
+    a: "Commonly around half the fee, up to a lifetime maximum that is often somewhere between $1,000 and $2,500. It varies enormously between plans, which is why we check rather than estimate.",
+  },
+  {
+    q: "What is a lifetime maximum?",
+    a: "A cap on what the plan will ever pay toward orthodontics for that person — not per year. If a child used part of it for early treatment, only the remainder is available for braces later.",
+  },
+  {
+    q: "Can I use insurance and a payment plan together?",
+    a: "Yes, and most people do. We work out what the insurer will pay, and the monthly plan covers what is left.",
+  },
+  {
+    q: "What happens if my insurance changes mid-treatment?",
+    a: "Tell us as soon as you know. We re-check the new plan and adjust the balance. Changing jobs partway through treatment is common and manageable.",
+  },
+  {
+    q: "Is the consultation charged to my insurance?",
+    a: "No. The consultation is free and nothing is claimed for it, so it does not touch your lifetime maximum.",
+  },
+];
+---
+
+<Layout
+  title="Insurance and Financing · Torrey Hills Orthodontics"
+  description="How orthodontic insurance works, what it typically covers, and the payment plans available at Torrey Hills Orthodontics in Carmel Valley, San Diego."
+>
+  <Navbar />
+
+  <main>
+    {/* Dark band so the navbar's white links have something to sit on before
+        the scrolled glass bar fades in — see .tpage-head in Layout.astro */}
+    <header class="tpage-head">
+      <div class="tpage-head-inner">
+        <nav class="crumbs" aria-label="Breadcrumb">
+          <a href={home}>Home</a>
+          <span aria-hidden="true">/</span>
+          {/* Not a link: there is no /patients hub page, by design */}
+          <span>Patients</span>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">Insurance and financing</span>
+        </nav>
+
+        <p class="section-eyebrow tpage-eyebrow">Patients</p>
+        <h1 class="tpage-title">Insurance and Financing</h1>
+        <p class="tpage-lede">
+          Cost is the first thing most people want to know and the last thing
+          most practices will put on a page. Here is how orthodontic cover
+          actually works, and what we do if you have none.
+        </p>
+
+        <dl class="spec-strip">
+          {
+            specs.map(({ label, value }) => (
+              <div class="spec">
+                <dt class="spec-label">{label}</dt>
+                <dd class="spec-value">{value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </header>
+
+    <section class="tsection">
+      <div class="tsection-inner tsplit">
+        <div class="tsplit-intro">
+          <p class="section-eyebrow">Worth knowing</p>
+          <h2 class="section-heading">Orthodontic cover is its own thing</h2>
+          <p class="section-subline tsplit-subline">
+            It does not behave like the rest of your dental benefit, and the
+            differences cost people money.
+          </p>
+        </div>
+        <ul class="case-list">
+          {howItWorks.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+    </section>
+
+    <section class="tsection tsection-band">
+      <div class="tsection-inner">
+        <p class="section-eyebrow">On your behalf</p>
+        <h2 class="section-heading">What we handle</h2>
+        <div class="care-grid">
+          {
+            whatWeDo.map(({ title, copy }) => (
+              <div class="care">
+                <h3 class="care-title">{title}</h3>
+                <p class="care-copy">{copy}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="tsection">
+      <div class="tsection-inner">
+        <p class="section-eyebrow">Paying for it</p>
+        <h2 class="section-heading">Three ways, often combined</h2>
+        <p class="section-subline steps-subline">
+          Whatever your cover looks like, the fee does not change. What changes
+          is how it is spread.
+        </p>
+        <div class="type-cards">
+          {
+            plans.map(({ title, copy, points }) => (
+              <article class="type-card">
+                <h3 class="type-card-title">{title}</h3>
+                <p class="type-card-copy">{copy}</p>
+                <ul class="treatment-points">
+                  {points.map((point) => (
+                    <li>{point}</li>
+                  ))}
+                </ul>
+              </article>
+            ))
+          }
+        </div>
+        {/* PLACEHOLDER figure — must be Dr. Lee's real range or removed */}
+        <p class="cost-note">
+          Full treatment here typically runs $3,500 to $7,000 depending on the
+          case. You get your exact figure at the consultation, in writing,
+          before anything begins — and we will have checked your insurance by
+          then, so it is the figure you actually pay.
+        </p>
+      </div>
+    </section>
+
+    <section class="faq">
+      <div class="faq-inner">
+        <div class="faq-intro">
+          <p class="section-eyebrow">Before you book</p>
+          <h2 class="section-heading">Questions about paying</h2>
+          <p class="section-subline">
+            Call the office with your insurer's name and your member ID and we
+            will check your cover before you come in. It takes one call.
+          </p>
+        </div>
+
+        {/* Own accordion name so it cannot interact with any other set */}
+        <div class="faq-list">
+          {
+            faqs.map(({ q, a }) => (
+              <details class="faq-item" name="insurance-faq">
+                <summary>
+                  <span class="faq-question">{q}</span>
+                  <svg class="faq-icon" viewBox="0 0 16 16" aria-hidden="true">
+                    <path d="M3 6l5 5 5-5" />
+                  </svg>
+                </summary>
+                <p class="faq-answer">{a}</p>
+              </details>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Consult />
+  <Footer />
+</Layout>

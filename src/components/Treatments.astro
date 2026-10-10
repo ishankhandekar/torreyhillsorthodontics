@@ -1,13 +1,16 @@
 ---
 import TextLink from "./TextLink.astro";
 
-// Placeholder destinations — no treatment pages exist yet.
+// Destinations are the four treatment pages under /src/pages.
 //
 // PRICES ARE PLACEHOLDERS. They are typical US ranges, not this practice's
 // fees, and they must be replaced with Dr. Lee's real numbers (or pulled
 // entirely) before launch — a patient could reasonably rely on them.
 // Durations and age ranges are typical for each treatment; worth confirming
 // with the practice too.
+const page = (slug: string) =>
+  `${import.meta.env.BASE_URL.replace(/\/$/, "")}/${slug}`;
+
 const treatments = [
   {
     title: "Clear Aligners",
@@ -18,7 +21,7 @@ const treatments = [
       "12–18 months typical",
       "Typically $4,000–$7,000",
     ],
-    href: "#clear-aligners",
+    href: page("clear-aligners"),
   },
   {
     title: "Advanced Braces",
@@ -29,7 +32,7 @@ const treatments = [
       "18–30 months typical",
       "Typically $3,500–$7,000",
     ],
-    href: "#advanced-braces",
+    href: page("braces"),
   },
   {
     title: "Jaw Orthopedics",
@@ -40,7 +43,7 @@ const treatments = [
       "9–18 months, before braces",
       "Typically $2,000–$4,000",
     ],
-    href: "#jaw-orthopedics",
+    href: page("early-treatment"),
   },
   {
     title: "Retention Care",
@@ -51,7 +54,7 @@ const treatments = [
       "Nightly, long term",
       "Typically $300–$800",
     ],
-    href: "#retention-care",
+    href: page("retainers"),
   },
 ];
 ---
